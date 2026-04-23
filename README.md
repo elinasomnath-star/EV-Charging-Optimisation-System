@@ -1,5 +1,5 @@
 # EVOCS — EV Optimal Charging Scheduler
-## IoT-Based Central Guidance System for NH-44 Highway Corridor
+## Central Guidance System for NH-44 Highway Corridor
 
 > Reinforcement Learning meets IoT to intelligently route and charge Electric Vehicles across a 200 km highway corridor in real time.
 
