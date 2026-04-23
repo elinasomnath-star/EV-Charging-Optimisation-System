@@ -88,8 +88,8 @@ The agent has 10 possible actions at each 15-minute timestep:
 ## Setup
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/EVOCS-NH44.git
-cd EVOCS-NH44
+git clone https://github.com/elinasomnath-star/EV-Charging-Optimisation-System.git
+cd EV-Charging-Optimisation-System
 pip install -r requirements.txt
 ```
 
