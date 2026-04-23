@@ -20,21 +20,6 @@ EVOCS solves both problems simultaneously.
 ---
 
 ## Solution Architecture
-
-```
-                    ┌─────────────────────────────────┐
-                    │     IoT Central Guidance System  │
-                    │  (routes EVs to optimal station) │
-                    └────────────┬────────────────────┘
-                                 │  real-time queue status
-              ┌──────────────────▼──────────────────────────────┐
-NH-44 ──────► │  Station 1   Station 2   Station 3  Station 4  Station 5 │
-Bangalore    │  Anekal      Hosur        Krishnagiri Dharmapuri Salem    │
-  → Salem    │    ↑            ↑             ↑           ↑         ↑    │
-             │        [DQN Agent manages local queue at each station]    │
-             └────────────────────────────────────────────────────────┘
-```
-
 ### Component 1 — IoT Guidance System (`iot/guidance_system.py`)
 - Acts as a centralized server broadcasting live station availability
 - Routes each incoming EV to the optimal station based on:
