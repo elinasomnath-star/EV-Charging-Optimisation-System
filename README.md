@@ -1,12 +1,10 @@
 # EVOCS — EV Optimal Charging Scheduler
 ## IoT-Based Central Guidance System for NH-44 Highway Corridor
-### Bangalore → Hosur → Krishnagiri → Dharmapuri → Salem
 
 > Reinforcement Learning meets IoT to intelligently route and charge Electric Vehicles across a 200 km highway corridor in real time.
 
 **Institution:** RV College of Engineering, Bangalore  
-**Program:** Experiential Learning Project, Semester IV, 2025–26  
-**Subjects Integrated:** Design & Analysis of Algorithms (DAA) | Computer Networks | Internet of Things (IoT)  
+**Program:** Experiential Learning Project, Semester IV, 2025–26   
 **UN SDGs Addressed:** SDG 7 (Affordable and Clean Energy) | SDG 11 (Sustainable Cities and Communities)
 
 ---
