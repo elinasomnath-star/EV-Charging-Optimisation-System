@@ -20,7 +20,7 @@ EVOCS solves both problems simultaneously.
 ---
 
 ## Solution Architecture
-### Component 1 — IoT Guidance System (`iot/guidance_system.py`)
+### Component 1 — IoT Guidance System (`intelligent/guidance_system.py`)
 - Acts as a centralized server broadcasting live station availability
 - Routes each incoming EV to the optimal station based on:
   - Reachability (battery SOC vs. distance)
@@ -42,7 +42,7 @@ EVOCS solves both problems simultaneously.
 |-------|---------|
 | `soc_model.py` | Tracks battery charge level using `SOC(t+1) = SOC(t) + (P × Δt × η) / C` |
 | `grid_model.py` | Enforces transformer KVA limits per station |
-| `tariff_model.py` | BESCOM Time-of-Day tariff (night: ₹4.5/kWh → evening peak: ₹8.0/kWh) |
+| `tariff_model.py` | BESCOM Time-of-Day tariff (night: ₹5.5/kWh → evening peak: ₹8.25/kWh) |
 | `queue_model.py` | Priority queue sorted by EV urgency (deadline proximity) |
 
 ---
@@ -51,11 +51,11 @@ EVOCS solves both problems simultaneously.
 
 | # | Station | Location (km) | Operator | Chargers | Power | Type |
 |---|---------|--------------|----------|----------|-------|------|
-| 1 | Anekal Junction | 28 | Bolt.Earth | 4 | 50 kW | DC CCS2 |
-| 2 | Hosur TataPower | 48 | TataPower | 6 | 50 kW | DC CCS2 |
-| 3 | Krishnagiri Statiq | 95 | Statiq | 3 | 50 kW | DC CCS2 |
-| 4 | Dharmapuri TataPower | 140 | TataPower | 4 | 50 kW | DC CCS2 |
-| 5 | Salem Bolt.Earth | 200 | Bolt.Earth | 8 | 50 kW | DC CCS2 |
+| 1 | Anekal Junction | 28 | Bolt.Earth | 2 | 30 kW | DC CCS2 |
+| 2 | Hosur TataPower | 48 | TataPower | 4 | 25 kW | DC CCS2 |
+| 3 | Krishnagiri Statiq | 95 | Statiq | 3 | 30 kW | DC CCS2 |
+| 4 | Dharmapuri TataPower | 140 | TataPower | 4 | 25 kW | DC CCS2 |
+| 5 | Salem Bolt.Earth | 200 | Bolt.Earth | 4 | 30 kW | DC CCS2 |
 
 ---
 
@@ -81,7 +81,7 @@ The agent has 10 possible actions at each 15-minute timestep:
 | 1–N — Charge top-N | Plug in the N most urgent EVs simultaneously |
 | 9 — Charge cheapest | Charge the EV that requires the least remaining energy |
 
-**Action Masking** ensures the agent never selects an action that exceeds a station's physical charger count. If Anekal has 4 chargers, actions 5–8 are mathematically blocked (masked to −∞ in the Q-value network).
+**Action Masking** ensures the agent never selects an action that exceeds a station's physical charger count. If Anekal has 2 chargers, actions 3–8 are mathematically blocked (masked to −∞ in the Q-value network).
 
 ---
 
@@ -130,15 +130,15 @@ Total EVs Generated on Highway: 95
 Per-Station Performance:
                   Station | Served | Missed |     Cost |   Reward
 ------------------------------------------------------------------
-          Anekal_Junction |     15 |      0 | Rs  3951 |    93.72
-          Hosur_TataPower |     13 |      0 | Rs  3277 |    88.14
-       Krishnagiri_Statiq |     21 |      1 | Rs  4447 |   165.20
-     Dharmapuri_TataPower |     23 |      1 | Rs  4766 |   142.35
-               Salem_Bolt |     15 |      0 | Rs  3534 |   104.38
+          Anekal_Junction |     15 |      0 | Rs  2605 |   108.48
+          Hosur_TataPower |     17 |      0 | Rs  3696 |    98.94
+       Krishnagiri_Statiq |     20 |      0 | Rs  4680 |   137.64
+     Dharmapuri_TataPower |     20 |      1 | Rs  3519 |   143.31
+               Salem_Bolt |     17 |      1 | Rs  3645 |   135.18
 ------------------------------------------------------------------
-             TOTAL SYSTEM |     87 |      2 | Rs 19975 |   593.79
+             TOTAL SYSTEM |     89 |      2 | Rs 18146 |   623.55
 ==================================================
-* Note: 6 EVs were still "In Progress" (charging or in transit) 
+* Note: 4 EVs were still "In Progress" (charging or in transit) 
   at the simulation end time (midnight).
 ```
 
@@ -164,7 +164,7 @@ evocs/
 │   ├── reward.py                 # Reward function (SOC gain − cost penalty)
 │   └── train.py                  # DQN agent (experience replay + target net)
 ├── iot/
-│   ├── guidance_system.py        # IoT routing & station selection logic
+│   ├── guidance_system.py        # Intelligent routing & station selection logic
 │   └── corridor_sim.py           # Synchronized 5-station simulation engine
 ├── evaluate.py                   # Metrics comparison across policies
 ├── main.py                       # CLI entry point

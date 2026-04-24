@@ -14,18 +14,18 @@ stations:
     name: "Anekal_Junction"
     location_km: 28
     operator: "Bolt.Earth"
-    n_chargers: 4
-    charger_kw: 50.0
-    transformer_kva: 250
+    n_chargers: 2
+    charger_kw: 30.0
+    transformer_kva: 100
     charger_type: "DC_CCS2"
 
   - id: 2
     name: "Hosur_TataPower"
     location_km: 48
     operator: "TataPower"
-    n_chargers: 6
-    charger_kw: 50.0
-    transformer_kva: 300
+    n_chargers: 4
+    charger_kw: 25.0
+    transformer_kva: 150
     charger_type: "DC_CCS2"
 
   - id: 3
@@ -33,8 +33,8 @@ stations:
     location_km: 95
     operator: "Statiq"
     n_chargers: 3
-    charger_kw: 50.0
-    transformer_kva: 160
+    charger_kw: 30.0
+    transformer_kva: 125
     charger_type: "DC_CCS2"
 
   - id: 4
@@ -42,38 +42,38 @@ stations:
     location_km: 140
     operator: "TataPower"
     n_chargers: 4
-    charger_kw: 50.0
-    transformer_kva: 250
+    charger_kw: 25.0
+    transformer_kva: 150
     charger_type: "DC_CCS2"
 
   - id: 5
     name: "Salem_Bolt"
     location_km: 200
     operator: "Bolt.Earth"
-    n_chargers: 8
-    charger_kw: 50.0
-    transformer_kva: 400
+    n_chargers: 4
+    charger_kw: 30.0
+    transformer_kva: 150
     charger_type: "DC_CCS2"
 
 ev_specs:
   - name: "Tata_Nexon_EV"
     battery_kwh: 40.5
-    max_charge_kw: 7.2
+    max_charge_kw: 50.0
     efficiency: 0.92
 
   - name: "Tata_Tiago_EV"
     battery_kwh: 24.0
-    max_charge_kw: 3.3
+    max_charge_kw: 25.0
     efficiency: 0.91
 
   - name: "MG_ZS_EV"
     battery_kwh: 50.3
-    max_charge_kw: 7.4
+    max_charge_kw: 50.0
     efficiency: 0.93
 
   - name: "Ola_S1_Pro"
     battery_kwh: 4.0
-    max_charge_kw: 1.5
+    max_charge_kw: 3.3
     efficiency: 0.90
 
 arrival:
