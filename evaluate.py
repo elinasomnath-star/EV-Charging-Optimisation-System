@@ -29,8 +29,14 @@ def run_baseline_episode(scheduler, config_path, station_idx=0):
     arrival_gen = ArrivalGenerator(
         station_id=station["id"],
         n_chargers=station["n_chargers"],
-        timescale_min=timescale_min
+        timescale_min=timescale_min,
+        station_charger_kw=station.get("charger_kw", 30.0),
+        station_charger_type=station.get("charger_type", "DC_CCS2"),
+        config_arrival=config.get("arrival", {}),
+        ev_specs=config.get("ev_specs", None)
     )
+
+
     grid = GridModel(transformer_kva=station["transformer_kva"])
     tariff = TariffModel()
 
