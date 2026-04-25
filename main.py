@@ -107,7 +107,7 @@ if __name__ == "__main__":
 
     # evaluate — pick a specific station to evaluate
     e = sub.add_parser("evaluate", help="Compare DQN vs baselines")
-    e.add_argument("--station", type=int, default=0,
+    e.add_argument("--station", type=int, default=-1,
                    help="Station index 0-4")
     e.add_argument("--model", default="models/saved/evocs_best.pt")
     e.add_argument("--episodes", type=int, default=100)

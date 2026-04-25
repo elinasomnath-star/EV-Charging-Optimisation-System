@@ -117,9 +117,10 @@ python main.py demo --station 0   # Anekal Junction
 python main.py demo --station 2   # Krishnagiri Statiq
 ```
 
-**Evaluate DQN vs baselines (Greedy, FCFS, EDF):**
+**Evaluate DQN vs baselines (Full Corridor Report):**
 ```bash
-python main.py evaluate --station 0 --episodes 100
+python main.py evaluate           # Evaluates all 5 stations (100 episodes each)
+python main.py evaluate --station 2  # Evaluate only Krishnagiri
 ```
 
 ---
@@ -166,7 +167,7 @@ Per-Station Performance:
 │   ├── tariff_model.py           # BESCOM Time-of-Day pricing
 │   └── queue_model.py            # Priority queue (urgency-sorted)
 ├── baselines/
-│   └── greedy.py                 # Greedy, FCFS, EDF baseline policies
+│   └── schedulers.py             # Greedy, FCFS, EDF baseline policies
 ├── rl/
 │   ├── charging_env.py           # OpenAI Gym-compatible environment
 │   ├── reward.py                 # Reward function (SOC gain − cost penalty)
@@ -182,11 +183,20 @@ Per-Station Performance:
 
 ---
 
-## Key Results
+## Key Results (Corridor-Wide Aggregate)
 
-- **~95% EVs successfully served** across the 200 km corridor per 24-hour simulation
-- **0 transformer violations** across all stations
-- **Tariff-aware scheduling** — agent naturally prefers night/morning tariff windows
-- **Action Masking** ensures the shared brain respects each station's unique hardware specs
+Based on a 100-episode evaluation across all 5 stations (Anekal to Salem):
+
+| Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
+|-----------|------------|------------|---------------|
+| FCFS (Current Apps) | 38.3 | 6.7 | ₹ 9,928 |
+| Greedy | 42.9 | 2.2 | ₹ 9,938 |
+| **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,957** |
+
+### Net Impact vs. Existing Systems:
+- **Financial Savings**: **₹ 14,856 saved per day** across the corridor.
+- **Reliability Improvement**: **33.6 fewer missed deadlines** per day.
+- **Grid Safety**: **100% compliance** with transformer KVA limits.
+
 
 ---

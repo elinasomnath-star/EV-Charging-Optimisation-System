@@ -7,7 +7,7 @@ import yaml
 import torch
 from rl.charging_env import EVChargingEnv
 from rl.train import DQNAgent
-from baselines.greedy import GreedyScheduler, EDFScheduler, FCFSScheduler
+from baselines.schedulers import GreedyScheduler, EDFScheduler, FCFSScheduler
 from models.queue_model import EVPriorityQueue
 from data.arrival_generator import ArrivalGenerator
 from models.grid_model import GridModel
@@ -15,7 +15,7 @@ from models.tariff_model import TariffModel
 from models.soc_model import SOCModel
 
 
-def run_baseline_episode(scheduler, config_path, station_idx=0):
+def run_baseline_episode(scheduler, config_path, station_idx=0, seed=42):
     """Run one episode with a baseline scheduler."""
     with open(config_path) as f:
         config = yaml.safe_load(f)
@@ -33,8 +33,10 @@ def run_baseline_episode(scheduler, config_path, station_idx=0):
         station_charger_kw=station.get("charger_kw", 30.0),
         station_charger_type=station.get("charger_type", "DC_CCS2"),
         config_arrival=config.get("arrival", {}),
-        ev_specs=config.get("ev_specs", None)
+        ev_specs=config.get("ev_specs", None),
+        random_seed=seed
     )
+
 
 
     grid = GridModel(transformer_kva=station["transformer_kva"])
@@ -113,84 +115,128 @@ def run_dqn_episode(agent, env):
 
 def evaluate(config_path: str = "config/nh44_config.yaml",
              model_path: str = "models/saved/evocs_best.pt",
-             station_idx: int = 0,
+             station_idx: int = -1,
              n_episodes: int = 100):
 
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    station = config["stations"][station_idx]
-    n_chargers = station["n_chargers"]
-    charger_kw = station["charger_kw"]
+    if station_idx == -1:
+        indices = list(range(len(config["stations"])))
+        print(f"\n=== NH-44 FULL CORRIDOR EVALUATION ===")
+        print(f"Running {n_episodes} episodes per algorithm across {len(indices)} stations")
+    else:
+        indices = [station_idx]
 
-    print(f"\nEVOCS Evaluation — {station['name']}")
-    print(f"Running {n_episodes} episodes per algorithm")
-    print("=" * 60)
+    corridor_stats = []
 
-    # Baseline schedulers
-    schedulers = {
-        "FCFS (Apps)": FCFSScheduler(n_chargers, charger_kw),
-        "Greedy":      GreedyScheduler(n_chargers, charger_kw),
-        "EDF":         EDFScheduler(n_chargers, charger_kw),
-    }
+    for idx in indices:
+        station = config["stations"][idx]
+        n_chargers = station["n_chargers"]
+        charger_kw = station["charger_kw"]
 
-    results = {}
+        print(f"\nEvaluating: {station['name']} (idx: {idx})")
+        print("-" * 40)
 
-    # Run baselines
-    for name, scheduler in schedulers.items():
-        ep_stats = [
-            run_baseline_episode(scheduler, config_path, station_idx)
-            for _ in range(n_episodes)
-        ]
-        results[name] = {
-            "evs_served":       np.mean([s["evs_served"] for s in ep_stats]),
-            "deadlines_missed": np.mean([s["deadlines_missed"] for s in ep_stats]),
-            "total_cost_rs":    np.mean([s["total_cost_rs"] for s in ep_stats]),
-            "grid_violations":  np.mean([s["grid_violations"] for s in ep_stats]),
+        # Baseline schedulers
+        schedulers = {
+            "FCFS (Apps)": FCFSScheduler(n_chargers, charger_kw),
+            "Greedy":      GreedyScheduler(n_chargers, charger_kw),
+            "EDF":         EDFScheduler(n_chargers, charger_kw),
         }
 
-    # Run DQN
-    env = EVChargingEnv(config_path=config_path,
-                        station_idx=station_idx)
-    state_dim = env.observation_space.shape[0]
-    action_dim = env.action_space.n
-    agent = DQNAgent(state_dim, action_dim, config["dqn"])
-    agent.load(model_path)
-    agent.epsilon = 0.0  # no exploration during eval
+        results = {}
 
-    dqn_stats = [run_dqn_episode(agent, env)
-                 for _ in range(n_episodes)]
-    results["DQN (EVOCS)"] = {
-        "evs_served":       np.mean([s["evs_served"] for s in dqn_stats]),
-        "deadlines_missed": np.mean([s["deadlines_missed"] for s in dqn_stats]),
-        "total_cost_rs":    np.mean([s["total_cost_rs"] for s in dqn_stats]),
-        "grid_violations":  np.mean([s["grid_violations"] for s in dqn_stats]),
-    }
+        # Run baselines
+        for name, scheduler in schedulers.items():
+            ep_stats = [
+                run_baseline_episode(scheduler, config_path, idx, seed=1000+i)
+                for i in range(n_episodes)
+            ]
 
-    # Print results table
-    print(f"\n{'Algorithm':<18} {'Served':>8} {'Missed':>8} "
-          f"{'Cost(Rs)':>10} {'Grid Viol':>10}")
-    print("-" * 60)
-    for name, r in results.items():
-        marker = " ◄" if name == "DQN (EVOCS)" else ""
-        print(f"{name:<18} {r['evs_served']:>8.1f} "
-              f"{r['deadlines_missed']:>8.1f} "
-              f"{r['total_cost_rs']:>10.1f} "
-              f"{r['grid_violations']:>10.1f}{marker}")
+            results[name] = {
+                "evs_served":       np.mean([s["evs_served"] for s in ep_stats]),
+                "deadlines_missed": np.mean([s["deadlines_missed"] for s in ep_stats]),
+                "total_cost_rs":    np.mean([s["total_cost_rs"] for s in ep_stats]),
+                "grid_violations":  np.mean([s["grid_violations"] for s in ep_stats]),
+            }
 
-    # DQN improvement over FCFS
-    fcfs = results["FCFS (Apps)"]
-    dqn = results["DQN (EVOCS)"]
-    cost_saved = fcfs["total_cost_rs"] - dqn["total_cost_rs"]
-    missed_reduced = fcfs["deadlines_missed"] - dqn["deadlines_missed"]
+        # Run DQN
+        env = EVChargingEnv(config_path=config_path,
+                            station_idx=idx)
+        state_dim = env.observation_space.shape[0]
+        action_dim = env.action_space.n
+        agent = DQNAgent(state_dim, action_dim, config["dqn"])
+        agent.load(model_path)
+        agent.epsilon = 0.0  # no exploration during eval
 
-    print(f"\nDQN vs FCFS (existing apps):")
-    print(f"  Cost saved per day:       Rs {cost_saved:.1f}")
-    print(f"  Missed deadlines reduced: {missed_reduced:.1f}")
-    print(f"  Grid violations reduced:  "
-          f"{fcfs['grid_violations'] - dqn['grid_violations']:.1f}")
+        dqn_stats = []
+        for i in range(n_episodes):
+            env.reset(seed=1000+i)
+            dqn_stats.append(run_dqn_episode(agent, env))
 
-    return results
+        results["DQN (EVOCS)"] = {
+            "evs_served":       np.mean([s["evs_served"] for s in dqn_stats]),
+            "deadlines_missed": np.mean([s["deadlines_missed"] for s in dqn_stats]),
+            "total_cost_rs":    np.mean([s["total_cost_rs"] for s in dqn_stats]),
+            "grid_violations":  np.mean([s["grid_violations"] for s in dqn_stats]),
+        }
+
+        # Print results table
+        print(f"\nResults for {station['name']}:")
+        print(f"{'Algorithm':<18} {'Served':>8} {'Missed':>8} "
+              f"{'Cost(Rs)':>10} {'Grid Viol':>10}")
+        print("-" * 60)
+        for name, r in results.items():
+            marker = " ◄" if name == "DQN (EVOCS)" else ""
+            print(f"{name:<18} {r['evs_served']:>8.1f} "
+                  f"{r['deadlines_missed']:>8.1f} "
+                  f"{r['total_cost_rs']:>10.1f} "
+                  f"{r['grid_violations']:>10.1f}{marker}")
+
+        # DQN improvement over FCFS
+        fcfs = results["FCFS (Apps)"]
+        dqn = results["DQN (EVOCS)"]
+        cost_saved = fcfs["total_cost_rs"] - dqn["total_cost_rs"]
+        missed_reduced = fcfs["deadlines_missed"] - dqn["deadlines_missed"]
+
+        print(f"\nDQN Performance at {station['name']}:")
+        print(f"  Cost saved per day:       Rs {cost_saved:.1f}")
+        print(f"  Missed deadlines reduced: {missed_reduced:.1f}")
+        
+        corridor_stats.append(results)
+
+    # Final Corridor Summary
+    if len(indices) > 1:
+        print("\n" + "="*80)
+        print("NH-44 CORRIDOR AGGREGATE PERFORMANCE (Per Station Average)")
+        print("="*80)
+        
+        avg_results = {}
+        # Get all algorithm names from the first station's results
+        algos = corridor_stats[0].keys()
+        
+        for algo in algos:
+            avg_results[algo] = {
+                "evs_served":       np.mean([s[algo]["evs_served"] for s in corridor_stats]),
+                "deadlines_missed": np.mean([s[algo]["deadlines_missed"] for s in corridor_stats]),
+                "total_cost_rs":    np.mean([s[algo]["total_cost_rs"] for s in corridor_stats]),
+            }
+
+        print(f"{'Algorithm':<18} {'Avg Served':>12} {'Avg Missed':>12} {'Avg Cost(Rs)':>15}")
+        print("-" * 80)
+        for name, r in avg_results.items():
+            marker = " ◄" if name == "DQN (EVOCS)" else ""
+            print(f"{name:<18} {r['evs_served']:>12.1f} {r['deadlines_missed']:>12.1f} {r['total_cost_rs']:>15.1f}{marker}")
+
+        dqn_v_fcfs_cost = avg_results["FCFS (Apps)"]["total_cost_rs"] - avg_results["DQN (EVOCS)"]["total_cost_rs"]
+        print(f"\nNET CORRIDOR IMPACT:")
+        print(f"  Total Daily Cost Saved:     Rs {dqn_v_fcfs_cost * 5:.1f} (Across 5 Stations)")
+        print(f"  Total Deadlines Saved:      {(avg_results['FCFS (Apps)']['deadlines_missed'] - avg_results['DQN (EVOCS)']['deadlines_missed']) * 5:.1f} EVs/Day")
+        print("="*80)
+    
+    return corridor_stats
+
 
 
 if __name__ == "__main__":
