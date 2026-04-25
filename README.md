@@ -63,13 +63,13 @@ EVOCS solves both problems simultaneously.
 ## EV Types Simulated
 
 | EV Model | Battery | Max Charge | Weight |
-
-|----------|---------|--------|--------|
+|----------|---------|------------|--------|
 | Tata Nexon EV | 40.5 kWh | 50 kW | 30% |
 | MG ZS EV | 50.3 kWh | 50 kW | 20% |
 | Hyundai Kona | 39.2 kWh | 50 kW | 15% |
 | Tata Tiago EV | 24.0 kWh | 25 kW | 20% |
 | Citroen_eC3 | 29.2 kWh | 30 kW | 15% |
+
 
 
 
@@ -135,16 +135,17 @@ EVs successfully routed:        95
 Per-Station Performance:
                   Station | Served | Missed |     Cost |   Reward
 ------------------------------------------------------------------
-          Anekal_Junction |     15 |      0 | Rs  2929 |   133.79
-          Hosur_TataPower |     11 |      0 | Rs  2621 |    65.56
-       Krishnagiri_Statiq |     23 |      0 | Rs  4339 |   180.04
-     Dharmapuri_TataPower |     24 |      0 | Rs  4713 |   182.45
-               Salem_Bolt |     18 |      0 | Rs  4723 |   134.35
+          Anekal_Junction |     10 |      0 | Rs  2213 |    68.98
+          Hosur_TataPower |     12 |      0 | Rs  2488 |    74.90
+       Krishnagiri_Statiq |     26 |      0 | Rs  4711 |   196.99
+     Dharmapuri_TataPower |     24 |      0 | Rs  4627 |   203.14
+               Salem_Bolt |     19 |      0 | Rs  4236 |   150.70
 ------------------------------------------------------------------
-             TOTAL SYSTEM |     91 |      0 | Rs 19325 |   696.20
+             TOTAL SYSTEM |     91 |      0 | Rs 18276 |   694.72
 ==================================================
 * Note: 4 EVs were still "In Progress" (charging or in transit) 
   at the simulation end time (midnight).
+
 
 
 ```
