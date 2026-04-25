@@ -62,13 +62,15 @@ EVOCS solves both problems simultaneously.
 
 ## EV Types Simulated
 
-| EV Model | Battery | Max DC | Weight |
+| EV Model | Battery | Max Charge | Weight |
+
 |----------|---------|--------|--------|
 | Tata Nexon EV | 40.5 kWh | 50 kW | 30% |
 | MG ZS EV | 50.3 kWh | 50 kW | 20% |
 | Hyundai Kona | 39.2 kWh | 50 kW | 15% |
 | Tata Tiago EV | 24.0 kWh | 25 kW | 20% |
-| Ola S1 Pro | 4.0 kWh | 3.3 kW | 15% |
+| Citroen_eC3 | 29.2 kWh | 30 kW | 15% |
+
 
 
 ---
@@ -152,7 +154,7 @@ Per-Station Performance:
 ## Project Structure
 
 ```
-evocs/
+.
 ├── config/
 │   └── nh44_config.yaml          # Station hardware & simulation config
 ├── data/
@@ -175,6 +177,7 @@ evocs/
 ├── main.py                       # CLI entry point
 └── requirements.txt
 ```
+
 
 ---
 

@@ -80,11 +80,12 @@ ev_specs:
     efficiency: 0.91
     weight: 0.20
 
-  - name: "Ola_S1_Pro"
-    battery_kwh: 4.0
-    max_charge_kw: 3.3
-    efficiency: 0.90
+  - name: "Citroen_eC3"
+    battery_kwh: 29.2
+    max_charge_kw: 30.0
+    efficiency: 0.92
     weight: 0.15
+
 
 
 arrival:

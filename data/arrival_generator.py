@@ -12,7 +12,8 @@ EV_TYPES = [
     {"name": "MG_ZS_EV",       "battery_kwh": 50.3, "max_kw": 7.4, "max_dc_kw": 50.0, "efficiency": 0.93, "weight": 0.20},
     {"name": "Hyundai_Kona",   "battery_kwh": 39.2, "max_kw": 7.2, "max_dc_kw": 50.0, "efficiency": 0.93, "weight": 0.15},
     {"name": "Tata_Tiago_EV",  "battery_kwh": 24.0, "max_kw": 3.3, "max_dc_kw": 25.0, "efficiency": 0.91, "weight": 0.20},
-    {"name": "Ola_S1_Pro",     "battery_kwh": 4.0,  "max_kw": 1.5, "max_dc_kw": 3.3,  "efficiency": 0.90, "weight": 0.15},
+    {"name": "Citroen_eC3",    "battery_kwh": 29.2, "max_kw": 7.2, "max_dc_kw": 30.0, "efficiency": 0.92, "weight": 0.15},
+
 ]
 EV_WEIGHTS = [ev["weight"] for ev in EV_TYPES]
 
