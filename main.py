@@ -24,7 +24,8 @@ def cmd_evaluate(args):
 
 
 def cmd_simulate_corridor(args):
-    from intelligent.corridor_sim import simulate_corridor
+    from iot.corridor_sim import simulate_corridor
+
     simulate_corridor(config_path=args.config, model_path=args.model)
 
 

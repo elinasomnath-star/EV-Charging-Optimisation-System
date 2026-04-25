@@ -6,17 +6,16 @@ import numpy as np
 from models.queue_model import EV
 
 # Indian EV specs from NH-44 app survey
+# Standard EV types (fallback defaults)
 EV_TYPES = [
-    {"name": "Tata_Nexon_EV",  "battery_kwh": 40.5,
-     "max_kw": 7.2, "max_dc_kw": 30.0, "efficiency": 0.92, "weight": 0.35},
-    {"name": "Tata_Tiago_EV",  "battery_kwh": 24.0,
-     "max_kw": 3.3, "max_dc_kw": 20.0, "efficiency": 0.91, "weight": 0.25},
-    {"name": "MG_ZS_EV",       "battery_kwh": 50.3,
-     "max_kw": 7.4, "max_dc_kw": 50.0, "efficiency": 0.93, "weight": 0.20},
-    {"name": "Ola_S1_Pro",     "battery_kwh": 4.0,
-     "max_kw": 1.5, "max_dc_kw": 1.5,  "efficiency": 0.90, "weight": 0.20},
+    {"name": "Tata_Nexon_EV",  "battery_kwh": 40.5, "max_kw": 7.2, "max_dc_kw": 50.0, "efficiency": 0.92, "weight": 0.30},
+    {"name": "MG_ZS_EV",       "battery_kwh": 50.3, "max_kw": 7.4, "max_dc_kw": 50.0, "efficiency": 0.93, "weight": 0.20},
+    {"name": "Hyundai_Kona",   "battery_kwh": 39.2, "max_kw": 7.2, "max_dc_kw": 50.0, "efficiency": 0.93, "weight": 0.15},
+    {"name": "Tata_Tiago_EV",  "battery_kwh": 24.0, "max_kw": 3.3, "max_dc_kw": 25.0, "efficiency": 0.91, "weight": 0.20},
+    {"name": "Ola_S1_Pro",     "battery_kwh": 4.0,  "max_kw": 1.5, "max_dc_kw": 3.3,  "efficiency": 0.90, "weight": 0.15},
 ]
 EV_WEIGHTS = [ev["weight"] for ev in EV_TYPES]
+
 
 
 class ArrivalGenerator:
@@ -41,6 +40,7 @@ class ArrivalGenerator:
                  station_charger_kw: float = 7.2,
                  station_charger_type: str = "AC_Type2",
                  config_arrival: dict = None,
+                 ev_specs: list = None,
                  random_seed: int = 42):
         self.station_id = station_id
         self.n_chargers = n_chargers
@@ -48,7 +48,26 @@ class ArrivalGenerator:
         self.station_charger_kw = station_charger_kw
         self.station_charger_type = station_charger_type
         
+        # Load EV types from config if provided, else use defaults
+        if ev_specs:
+            self.ev_types = []
+            for spec in ev_specs:
+                # Map config keys to internal keys if necessary
+                ev = spec.copy()
+                if "max_charge_kw" in ev:
+                    ev["max_dc_kw"] = ev.get("max_dc_kw", ev["max_charge_kw"])
+                    ev["max_kw"] = ev.get("max_kw", 7.2) # Default AC limit
+                self.ev_types.append(ev)
+        else:
+            self.ev_types = EV_TYPES
+
+        self.ev_weights = [ev.get("weight", 1.0/len(self.ev_types)) for ev in self.ev_types]
+        # Normalize weights
+        total_w = sum(self.ev_weights)
+        self.ev_weights = [w / total_w for w in self.ev_weights]
+
         if config_arrival is None:
+
             config_arrival = {}
         self.min_soc = config_arrival.get("min_soc_on_arrival", 0.15)
         self.max_soc = config_arrival.get("max_soc_on_arrival", 0.65)
@@ -63,8 +82,9 @@ class ArrivalGenerator:
         return int((timestep * self.timescale_hr)) % 24
 
     def _sample_ev_type(self) -> dict:
-        idx = self.rng.choice(len(EV_TYPES), p=EV_WEIGHTS)
-        return EV_TYPES[idx]
+        idx = self.rng.choice(len(self.ev_types), p=self.ev_weights)
+        return self.ev_types[idx]
+
 
     def get_arrivals(self, timestep: int) -> list:
         """

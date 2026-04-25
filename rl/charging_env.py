@@ -23,11 +23,10 @@ class EVChargingEnv(gym.Env):
              timestep_normalized, n_chargers_normalized,
              transformer_normalized]
 
-    Action: 0 = charge top-1 urgent EV
-            1 = charge top-2 urgent EVs
-            2 = charge top-3 urgent EVs
-            3 = charge cheapest (lowest urgency / off-peak strategy)
-            4 = hold / skip
+    Action: 0 = Hold / Skip
+            1-8 = Charge top-N urgent EVs (respects station charger count)
+            9 = Charge cheapest (lowest remaining energy needed)
+
     """
 
     metadata = {"render_modes": []}
@@ -96,8 +95,10 @@ class EVChargingEnv(gym.Env):
             timescale_min=self.timescale_min,
             station_charger_kw=s["charger_kw"],
             station_charger_type=s["charger_type"],
-            config_arrival=self.config.get("arrival", {})
+            config_arrival=self.config.get("arrival", {}),
+            ev_specs=self.config.get("ev_specs", None)
         )
+
         self.queue = EVPriorityQueue()
 
     def reset(self, seed=None, options=None):

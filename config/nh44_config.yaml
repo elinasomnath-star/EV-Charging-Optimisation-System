@@ -60,21 +60,32 @@ ev_specs:
     battery_kwh: 40.5
     max_charge_kw: 50.0
     efficiency: 0.92
-
-  - name: "Tata_Tiago_EV"
-    battery_kwh: 24.0
-    max_charge_kw: 25.0
-    efficiency: 0.91
+    weight: 0.30
 
   - name: "MG_ZS_EV"
     battery_kwh: 50.3
     max_charge_kw: 50.0
     efficiency: 0.93
+    weight: 0.20
+
+  - name: "Hyundai_Kona"
+    battery_kwh: 39.2
+    max_charge_kw: 50.0
+    efficiency: 0.93
+    weight: 0.15
+
+  - name: "Tata_Tiago_EV"
+    battery_kwh: 24.0
+    max_charge_kw: 25.0
+    efficiency: 0.91
+    weight: 0.20
 
   - name: "Ola_S1_Pro"
     battery_kwh: 4.0
     max_charge_kw: 3.3
     efficiency: 0.90
+    weight: 0.15
+
 
 arrival:
   peak_hours: [7, 8, 9, 17, 18, 19, 20]  # highway peak traffic

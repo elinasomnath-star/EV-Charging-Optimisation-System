@@ -52,7 +52,14 @@ def simulate_corridor(config_path="config/nh44_config.yaml", model_path="models/
 
     # 3. Initialize Highway Components
     guidance = GuidanceSystem()
-    highway_gen = ArrivalGenerator(station_id=0, n_chargers=20, timescale_min=15, config_arrival=config.get("arrival", {}))
+    highway_gen = ArrivalGenerator(
+        station_id=0,
+        n_chargers=20,
+        timescale_min=15,
+        config_arrival=config.get("arrival", {}),
+        ev_specs=config.get("ev_specs", None)
+    )
+
     # Boost highway arrival rate to simulate corridor traffic
     highway_gen.HOURLY_ARRIVAL_RATE = {k: v * 2 for k, v in highway_gen.HOURLY_ARRIVAL_RATE.items()}
     

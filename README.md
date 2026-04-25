@@ -20,7 +20,8 @@ EVOCS solves both problems simultaneously.
 ---
 
 ## Solution Architecture
-### Component 1 — IoT Guidance System (`intelligent/guidance_system.py`)
+### Component 1 — IoT Guidance System (`iot/guidance_system.py`)
+
 - Acts as a centralized server broadcasting live station availability
 - Routes each incoming EV to the optimal station based on:
   - Reachability (battery SOC vs. distance)
@@ -61,13 +62,14 @@ EVOCS solves both problems simultaneously.
 
 ## EV Types Simulated
 
-| EV Model | Battery | Max AC | Max DC |
+| EV Model | Battery | Max DC | Weight |
 |----------|---------|--------|--------|
-| Tata Nexon EV | 40.5 kWh | 7.2 kW | 50 kW |
-| MG ZS EV | 50.3 kWh | 7.4 kW | 76 kW |
-| Hyundai Kona | 39.2 kWh | 7.2 kW | 50 kW |
-| Tata Tigor EV | 26.0 kWh | 7.2 kW | 25 kW |
-| Ola S1 Pro | 4.0 kWh | 1.5 kW | — |
+| Tata Nexon EV | 40.5 kWh | 50 kW | 30% |
+| MG ZS EV | 50.3 kWh | 50 kW | 20% |
+| Hyundai Kona | 39.2 kWh | 50 kW | 15% |
+| Tata Tiago EV | 24.0 kWh | 25 kW | 20% |
+| Ola S1 Pro | 4.0 kWh | 3.3 kW | 15% |
+
 
 ---
 
@@ -126,20 +128,23 @@ python main.py evaluate --station 0 --episodes 100
 NH-44 CORRIDOR SIMULATION COMPLETE
 ==================================================
 Total EVs Generated on Highway: 95
+EVs successfully routed:        95
 
 Per-Station Performance:
                   Station | Served | Missed |     Cost |   Reward
 ------------------------------------------------------------------
-          Anekal_Junction |     15 |      0 | Rs  2605 |   108.48
-          Hosur_TataPower |     17 |      0 | Rs  3696 |    98.94
-       Krishnagiri_Statiq |     20 |      0 | Rs  4680 |   137.64
-     Dharmapuri_TataPower |     20 |      1 | Rs  3519 |   143.31
-               Salem_Bolt |     17 |      1 | Rs  3645 |   135.18
+          Anekal_Junction |     15 |      0 | Rs  2929 |   133.79
+          Hosur_TataPower |     11 |      0 | Rs  2621 |    65.56
+       Krishnagiri_Statiq |     23 |      0 | Rs  4339 |   180.04
+     Dharmapuri_TataPower |     24 |      0 | Rs  4713 |   182.45
+               Salem_Bolt |     18 |      0 | Rs  4723 |   134.35
 ------------------------------------------------------------------
-             TOTAL SYSTEM |     89 |      2 | Rs 18146 |   623.55
+             TOTAL SYSTEM |     91 |      0 | Rs 19325 |   696.20
 ==================================================
 * Note: 4 EVs were still "In Progress" (charging or in transit) 
   at the simulation end time (midnight).
+
+
 ```
 
 ---
