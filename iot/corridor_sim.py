@@ -111,7 +111,9 @@ def simulate_corridor(config_path="config/nh44_config.yaml", model_path="models/
             ev.deadline_step = arrival_step + (ev.deadline_step - step) # Keep same stay duration
             
             # Update max charge rate based on assigned station
-            ev_type_dict = next((et for et in EV_TYPES if et["name"] == ev.ev_type), None)
+            # Use specs from the generator which are synced with config
+            ev_type_dict = next((et for et in highway_gen.ev_types if et["name"] == ev.ev_type), None)
+
             
             if "DC" in station_statuses[st_idx].get("charger_type", ""):
                 max_dc = ev_type_dict.get("max_dc_kw", ev_type_dict["max_kw"]) if ev_type_dict else 50.0
