@@ -171,26 +171,6 @@ Per-Station Performance:
 ==================================================
 * Note: 4 EVs were still "In Progress" (charging or in transit) 
   at the simulation end time (midnight).
-
-==================================================
-NH-275 CORRIDOR SIMULATION COMPLETE
-==================================================
-Total EVs Generated on Highway: 95
-EVs successfully routed:        95
-
-Per-Station Performance:
-                  Station | Served | Missed |     Cost |   Reward
-------------------------------------------------------------------
-              Bidadi_Zeon |     15 |      0 | Rs  3353 |   117.65
-    Channapatna_TataPower |     10 |      0 | Rs  2872 |    54.85
-            Maddur_Statiq |     32 |      0 | Rs  6998 |   230.33
-             Mandya_JioBP |     29 |      0 | Rs  5723 |   208.96
-       Srirangapatna_Zeon |      5 |      0 | Rs  1238 |    27.31
-------------------------------------------------------------------
-             TOTAL SYSTEM |     91 |      0 | Rs 20184 |   639.09
-==================================================
-* Note: 4 EVs were still "In Progress" (charging or in transit) 
-  at the simulation end time (midnight).
 ```
 
 ---
