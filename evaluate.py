@@ -4,6 +4,7 @@
 
 import numpy as np
 import yaml
+import os
 import torch
 from rl.charging_env import EVChargingEnv
 from rl.train import DQNAgent
@@ -123,7 +124,9 @@ def evaluate(config_path: str = "config/nh44_config.yaml",
 
     if station_idx == -1:
         indices = list(range(len(config["stations"])))
-        print(f"\n=== NH-44 FULL CORRIDOR EVALUATION ===")
+        config_prefix = os.path.basename(config_path).split('.')[0].replace('_config', '').upper()
+        corridor_name = "NH-44" if config_prefix == "NH44" else ("NH-275" if config_prefix == "NH275" else config_prefix)
+        print(f"\n=== {corridor_name} FULL CORRIDOR EVALUATION ===")
         print(f"Running {n_episodes} episodes per algorithm across {len(indices)} stations")
     else:
         indices = [station_idx]
@@ -208,8 +211,10 @@ def evaluate(config_path: str = "config/nh44_config.yaml",
 
     # Final Corridor Summary
     if len(indices) > 1:
+        config_prefix = os.path.basename(config_path).split('.')[0].replace('_config', '').upper()
+        corridor_name = "NH-44" if config_prefix == "NH44" else ("NH-275" if config_prefix == "NH275" else config_prefix)
         print("\n" + "="*80)
-        print("NH-44 CORRIDOR AGGREGATE PERFORMANCE (Per Station Average)")
+        print(f"{corridor_name} CORRIDOR AGGREGATE PERFORMANCE (Per Station Average)")
         print("="*80)
         
         avg_results = {}
@@ -231,8 +236,8 @@ def evaluate(config_path: str = "config/nh44_config.yaml",
 
         dqn_v_fcfs_cost = avg_results["FCFS (Apps)"]["total_cost_rs"] - avg_results["DQN (EVOCS)"]["total_cost_rs"]
         print(f"\nNET CORRIDOR IMPACT:")
-        print(f"  Total Daily Cost Saved:     Rs {dqn_v_fcfs_cost * 5:.1f} (Across 5 Stations)")
-        print(f"  Total Deadlines Saved:      {(avg_results['FCFS (Apps)']['deadlines_missed'] - avg_results['DQN (EVOCS)']['deadlines_missed']) * 5:.1f} EVs/Day")
+        print(f"  Total Daily Cost Saved:     Rs {dqn_v_fcfs_cost * len(indices):.1f} (Across {len(indices)} Stations)")
+        print(f"  Total Deadlines Saved:      {(avg_results['FCFS (Apps)']['deadlines_missed'] - avg_results['DQN (EVOCS)']['deadlines_missed']) * len(indices):.1f} EVs/Day")
         print("="*80)
     
     return corridor_stats

@@ -1,5 +1,5 @@
 # iot/guidance_system.py
-# IoT Central Guidance System for NH-44 EVs
+# IoT Central Guidance System for EVs
 # Computes optimal charging station based on distance, SOC, and queue length.
 
 class GuidanceSystem:

@@ -1,0 +1,108 @@
+# EVOCS - EV Optimal Charging Scheduler
+# NH-275 Highway Corridor Configuration
+# Bangalore → Bidadi → Ramanagara → Channapatna → Maddur → Mandya → Srirangapatna → Mysore
+
+simulation:
+  timescale: 15                # minutes per step
+  simulation_length: 96        # steps per episode (24 hours)
+  n_episodes_train: 2000
+  n_episodes_eval: 100
+  random_seed: 42
+
+stations:
+  - id: 1
+    name: "Bidadi_Zeon"
+    location_km: 30
+    operator: "Zeon"
+    n_chargers: 2
+    charger_kw: 50.0
+    transformer_kva: 150
+    charger_type: "DC_CCS2"
+
+  - id: 2
+    name: "Channapatna_TataPower"
+    location_km: 65
+    operator: "TataPower"
+    n_chargers: 4
+    charger_kw: 50.0
+    transformer_kva: 150
+    charger_type: "DC_CCS2"
+
+  - id: 3
+    name: "Maddur_Statiq"
+    location_km: 85
+    operator: "Statiq"
+    n_chargers: 3
+    charger_kw: 60.0
+    transformer_kva: 200
+    charger_type: "DC_CCS2"
+
+  - id: 4
+    name: "Mandya_JioBP"
+    location_km: 105
+    operator: "JioBP"
+    n_chargers: 4
+    charger_kw: 60.0
+    transformer_kva: 300
+    charger_type: "DC_CCS2"
+
+  - id: 5
+    name: "Srirangapatna_Zeon"
+    location_km: 130
+    operator: "Zeon"
+    n_chargers: 2
+    charger_kw: 50.0
+    transformer_kva: 150
+    charger_type: "DC_CCS2"
+
+ev_specs:
+  - name: "Tata_Nexon_EV"
+    battery_kwh: 40.5
+    max_charge_kw: 50.0
+    efficiency: 0.92
+    weight: 0.30
+
+  - name: "MG_ZS_EV"
+    battery_kwh: 50.3
+    max_charge_kw: 50.0
+    efficiency: 0.93
+    weight: 0.20
+
+  - name: "Hyundai_Kona"
+    battery_kwh: 39.2
+    max_charge_kw: 50.0
+    efficiency: 0.93
+    weight: 0.15
+
+  - name: "Tata_Tiago_EV"
+    battery_kwh: 24.0
+    max_charge_kw: 25.0
+    efficiency: 0.91
+    weight: 0.20
+
+  - name: "Citroen_eC3"
+    battery_kwh: 29.2
+    max_charge_kw: 30.0
+    efficiency: 0.92
+    weight: 0.15
+
+arrival:
+  peak_hours: [7, 8, 9, 17, 18, 19, 20]  # highway peak traffic
+  base_arrival_rate: 1                     # EVs per hour off-peak
+  peak_arrival_rate: 3                     # EVs per hour peak
+  min_soc_on_arrival: 0.15
+  max_soc_on_arrival: 0.65
+  min_stay_hours: 1.0
+  max_stay_hours: 3.0
+  target_soc: 0.80
+
+dqn:
+  learning_rate: 0.0005
+  gamma: 0.99
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.9995
+  batch_size: 64
+  memory_size: 20000
+  target_update_freq: 200
+  hidden_layers: [128, 64]

@@ -19,7 +19,15 @@ def simulate_corridor(config_path="config/nh44_config.yaml", model_path="models/
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    print("Initializing NH-44 Corridor Simulation...")
+    config_prefix = os.path.basename(config_path).split('.')[0].replace('_config', '').upper()
+    if config_prefix == "NH44":
+        corridor_name = "NH-44"
+    elif config_prefix == "NH275":
+        corridor_name = "NH-275"
+    else:
+        corridor_name = config_prefix
+
+    print(f"Initializing {corridor_name} Corridor Simulation...")
     
     # 1. Initialize 5 Envs
     envs = []
@@ -85,10 +93,14 @@ def simulate_corridor(config_path="config/nh44_config.yaml", model_path="models/
         # Generate EVs entering the highway at km 0
         new_evs = highway_gen.get_arrivals(step)
         
+        # Calculate the spawn range (80% of the highway length)
+        max_station_km = max([st["location_km"] for st in station_statuses])
+        spawn_range = max_station_km * 0.8
+        
         routed_this_step = []
         for ev in new_evs:
             # Assume EVs enter with a random SOC, starting randomly along the highway
-            start_km = random.uniform(0, 160.0)
+            start_km = random.uniform(0, spawn_range)
             rec = guidance.recommend_station(ev.soc, ev.battery_kwh, start_km, station_statuses)
             
             if rec is None:
@@ -176,7 +188,7 @@ def simulate_corridor(config_path="config/nh44_config.yaml", model_path="models/
             print(f"{step:>4} | {len(new_evs):>4} EVs | {routes_str:>35} | {' - '.join(queues_str):>25}")
 
     print("\n" + "="*50)
-    print("NH-44 CORRIDOR SIMULATION COMPLETE")
+    print(f"{corridor_name} CORRIDOR SIMULATION COMPLETE")
     print("="*50)
     print(f"Total EVs Generated on Highway: {total_routed}")
     print(f"EVs successfully routed:        {total_routed}")

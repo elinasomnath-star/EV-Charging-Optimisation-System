@@ -102,14 +102,14 @@ if __name__ == "__main__":
 
     # train — no --station needed (trains all stations together)
     t = sub.add_parser("train", help="Train DQN on all stations")
-    t.add_argument("--save-dir", default="models/saved")
+    t.add_argument("--save-dir", default=None, help="Directory to save models. Auto-determined if not set.")
     t.set_defaults(func=cmd_train)
 
     # evaluate — pick a specific station to evaluate
     e = sub.add_parser("evaluate", help="Compare DQN vs baselines")
     e.add_argument("--station", type=int, default=-1,
                    help="Station index 0-4")
-    e.add_argument("--model", default="models/saved/evocs_best.pt")
+    e.add_argument("--model", default=None, help="Path to model. Auto-determined if not set.")
     e.add_argument("--episodes", type=int, default=100)
     e.set_defaults(func=cmd_evaluate)
 
@@ -117,16 +117,31 @@ if __name__ == "__main__":
     d = sub.add_parser("demo", help="Run single episode live")
     d.add_argument("--station", type=int, default=0,
                    help="Station index 0-4")
-    d.add_argument("--model", default="models/saved/evocs_best.pt")
+    d.add_argument("--model", default=None, help="Path to model. Auto-determined if not set.")
     d.set_defaults(func=cmd_demo)
 
     # simulate_corridor
     sc = sub.add_parser("simulate_corridor", help="Run synchronized multi-station corridor simulation")
-    sc.add_argument("--model", default="models/saved/evocs_best.pt")
+    sc.add_argument("--model", default=None, help="Path to model. Auto-determined if not set.")
     sc.set_defaults(func=cmd_simulate_corridor)
 
     args = parser.parse_args()
-    if args.command is None:
-        parser.print_help()
-    else:
+    
+    if args.command is not None:
+        # Automatically determine save_dir and model paths based on config
+        config_name = os.path.basename(args.config).split('.')[0]
+        config_prefix = config_name.replace("_config", "") # e.g. 'nh44' or 'nh275'
+        
+        auto_save_dir = f"models/{config_prefix}"
+            
+        auto_model = os.path.join(auto_save_dir, "evocs_best.pt")
+        
+        if hasattr(args, 'save_dir') and args.save_dir is None:
+            args.save_dir = auto_save_dir
+            
+        if hasattr(args, 'model') and args.model is None:
+            args.model = auto_model
+
         args.func(args)
+    else:
+        parser.print_help()

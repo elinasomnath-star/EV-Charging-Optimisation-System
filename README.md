@@ -1,7 +1,7 @@
 # EVOCS — EV Optimal Charging Scheduler
-## Central Guidance System for NH-44 Highway Corridor
+## Central Guidance System for Highway Corridors
 
-> Reinforcement Learning meets IoT to intelligently route and charge Electric Vehicles across a 200 km highway corridor in real time.
+> Reinforcement Learning meets IoT to intelligently route and charge Electric Vehicles across highway corridors (e.g., NH-44 and NH-275) in real time.
 
 **Institution:** RV College of Engineering, Bangalore  
 **Program:** Experiential Learning Project, Semester IV, 2025–26   
@@ -48,7 +48,7 @@ EVOCS solves both problems simultaneously.
 
 ---
 
-## NH-44 Charging Stations
+## NH-44 Charging Stations (Bangalore to Salem)
 
 | # | Station | Location (km) | Operator | Chargers | Power | Type |
 |---|---------|--------------|----------|----------|-------|------|
@@ -57,6 +57,18 @@ EVOCS solves both problems simultaneously.
 | 3 | Krishnagiri Statiq | 95 | Statiq | 3 | 30 kW | DC CCS2 |
 | 4 | Dharmapuri TataPower | 140 | TataPower | 4 | 25 kW | DC CCS2 |
 | 5 | Salem Bolt.Earth | 200 | Bolt.Earth | 4 | 30 kW | DC CCS2 |
+
+---
+
+## NH-275 Charging Stations (Bangalore to Mysore Expressway)
+
+| # | Station | Location (km) | Operator | Chargers | Power | Type |
+|---|---------|--------------|----------|----------|-------|------|
+| 1 | Bidadi Zeon | 30 | Zeon | 2 | 50 kW | DC CCS2 |
+| 2 | Channapatna TataPower | 65 | TataPower | 4 | 50 kW | DC CCS2 |
+| 3 | Maddur Statiq | 85 | Statiq | 3 | 60 kW | DC CCS2 |
+| 4 | Mandya JioBP | 105 | JioBP | 4 | 60 kW | DC CCS2 |
+| 5 | Srirangapatna Zeon | 130 | Zeon | 2 | 50 kW | DC CCS2 |
 
 ---
 
@@ -101,26 +113,39 @@ pip install -r requirements.txt
 
 ## Usage
 
-**Train the DQN agent (all stations):**
+EVOCS supports multiple highway corridors via configuration files. 
+
+**Train the DQN agent:**
 ```bash
-python main.py train
+# Trains for NH-44 and automatically saves to models/nh44/
+python main.py --config config/nh44_config.yaml train
+
+# Trains for NH-275 and automatically saves to models/nh275/
+python main.py --config config/nh275_config.yaml train
 ```
 
-**Run full NH-44 corridor simulation (all 5 stations simultaneously):**
+**Run full corridor simulation (all stations simultaneously):**
 ```bash
-python main.py simulate_corridor
+# Simulates the full NH-44 Corridor
+python main.py --config config/nh44_config.yaml simulate_corridor
+
+# Simulates the full NH-275 Expressway
+python main.py --config config/nh275_config.yaml simulate_corridor
 ```
 
 **Run live demo for a single station:**
 ```bash
-python main.py demo --station 0   # Anekal Junction
-python main.py demo --station 2   # Krishnagiri Statiq
+python main.py --config config/nh44_config.yaml demo --station 0   # Anekal Junction (NH-44)
+python main.py --config config/nh275_config.yaml demo --station 2  # Maddur Statiq (NH-275)
 ```
 
 **Evaluate DQN vs baselines (Full Corridor Report):**
 ```bash
-python main.py evaluate           # Evaluates all 5 stations (100 episodes each)
-python main.py evaluate --station 2  # Evaluate only Krishnagiri
+# Evaluates all stations on NH-44
+python main.py --config config/nh44_config.yaml evaluate
+
+# Evaluates all stations on NH-275
+python main.py --config config/nh275_config.yaml evaluate
 ```
 
 ---
@@ -147,8 +172,25 @@ Per-Station Performance:
 * Note: 4 EVs were still "In Progress" (charging or in transit) 
   at the simulation end time (midnight).
 
+==================================================
+NH-275 CORRIDOR SIMULATION COMPLETE
+==================================================
+Total EVs Generated on Highway: 95
+EVs successfully routed:        95
 
-
+Per-Station Performance:
+                  Station | Served | Missed |     Cost |   Reward
+------------------------------------------------------------------
+              Bidadi_Zeon |     15 |      0 | Rs  3353 |   117.65
+    Channapatna_TataPower |     10 |      0 | Rs  2872 |    54.85
+            Maddur_Statiq |     32 |      0 | Rs  6998 |   230.33
+             Mandya_JioBP |     29 |      0 | Rs  5723 |   208.96
+       Srirangapatna_Zeon |      5 |      0 | Rs  1238 |    27.31
+------------------------------------------------------------------
+             TOTAL SYSTEM |     91 |      0 | Rs 20184 |   639.09
+==================================================
+* Note: 4 EVs were still "In Progress" (charging or in transit) 
+  at the simulation end time (midnight).
 ```
 
 ---
@@ -158,10 +200,13 @@ Per-Station Performance:
 ```
 .
 ├── config/
-│   └── nh44_config.yaml          # Station hardware & simulation config
+│   ├── nh44_config.yaml          # NH-44 Station hardware & simulation config
+│   └── nh275_config.yaml         # NH-275 Expressway configuration
 ├── data/
 │   └── arrival_generator.py      # Stochastic EV arrival model (ToD-weighted)
 ├── models/
+│   ├── nh44/                     # Trained models for NH-44
+│   ├── nh275/                    # Trained models for NH-275
 │   ├── soc_model.py              # Battery SOC dynamics
 │   ├── grid_model.py             # Transformer KVA constraint
 │   ├── tariff_model.py           # BESCOM Time-of-Day pricing
@@ -183,9 +228,9 @@ Per-Station Performance:
 
 ---
 
-## Key Results (Corridor-Wide Aggregate)
+## Key Results: NH-44 (Bangalore - Salem)
 
-Based on a 100-episode evaluation across all 5 stations (Anekal to Salem):
+Based on a 100-episode evaluation across all 5 stations:
 
 | Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
 |-----------|------------|------------|---------------|
@@ -193,10 +238,27 @@ Based on a 100-episode evaluation across all 5 stations (Anekal to Salem):
 | Greedy | 42.9 | 2.2 | ₹ 9,938 |
 | **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,957** |
 
-### Net Impact vs. Existing Systems:
+### Net Impact vs. Existing Systems (NH-44):
 - **Financial Savings**: **₹ 14,856 saved per day** across the corridor.
 - **Reliability Improvement**: **33.6 fewer missed deadlines** per day.
 - **Grid Safety**: **100% compliance** with transformer KVA limits.
 
+---
+
+## Key Results: NH-275 (Bangalore - Mysore Expressway)
+
+Based on a 100-episode evaluation across all 5 stations:
+
+| Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
+|-----------|------------|------------|---------------|
+| FCFS (Current Apps) | 41.2 | 3.8 | ₹ 13,223 |
+| Greedy | 44.5 | 0.6 | ₹ 13,236 |
+| EDF | 43.8 | 1.2 | ₹ 6,575 |
+| **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,995** |
+
+### Net Impact vs. Existing Systems (NH-275):
+- **Financial Savings**: **₹ 31,141 saved per day** across the corridor.
+- **Reliability Improvement**: **19.2 fewer missed deadlines** per day.
+- **Grid Safety**: **100% compliance** with transformer KVA limits.
 
 ---
