@@ -1,6 +1,6 @@
 # rl/charging_env.py
 # OpenAI Gym-compatible EV Charging Environment
-# Supports ALL NH-44 stations in a single training run
+# Supports ALL stations in a single training run
 
 import gymnasium as gym
 import numpy as np
@@ -16,7 +16,7 @@ class EVChargingEnv(gym.Env):
     """
     EV Charging Scheduling Environment for DQN training.
     When station_idx = -1, randomly picks a station each episode
-    so the agent learns to generalise across all NH-44 stations.
+    so the agent learns to generalise across all stations.
 
     State:  [soc_1..N, urgency_1..N, deadline_1..N,
              tariff_normalized, grid_utilization,

@@ -1,6 +1,6 @@
 # models/grid_model.py
 # Indian Grid Constraint Model
-# Simulates transformer limits for NH-44 highway stations
+# Simulates transformer limits for highway stations
 
 class GridModel:
     """

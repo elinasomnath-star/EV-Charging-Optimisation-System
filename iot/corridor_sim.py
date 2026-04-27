@@ -1,5 +1,5 @@
 # iot/corridor_sim.py
-# System-Level Simulation of NH-44 Highway Corridor
+# System-Level Simulation of Highway Corridor
 
 import yaml
 import numpy as np

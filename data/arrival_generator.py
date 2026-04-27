@@ -1,11 +1,11 @@
 # data/arrival_generator.py
-# EV Arrival Generator for NH-44 Highway Stations
-# Simulates highway traffic patterns (Bangalore → Salem corridor)
+# EV Arrival Generator
+# Simulates highway traffic patterns 
 
 import numpy as np
 from models.queue_model import EV
 
-# Indian EV specs from NH-44 app survey
+# Indian EV specs from real-world survey
 # Standard EV types (fallback defaults)
 EV_TYPES = [
     {"name": "Tata_Nexon_EV",  "battery_kwh": 40.5, "max_kw": 7.2, "max_dc_kw": 50.0, "efficiency": 0.92, "weight": 0.30},
@@ -21,11 +21,11 @@ EV_WEIGHTS = [ev["weight"] for ev in EV_TYPES]
 
 class ArrivalGenerator:
     """
-    Generates EV arrivals based on NH-44 highway traffic patterns.
+    Generates EV arrivals based on highway traffic patterns.
     Peak hours: morning (7-9 AM) and evening (5-8 PM).
     """
 
-    # NH-44 highway: higher traffic on weekday mornings and evenings
+    # Highway: higher traffic on weekday mornings and evenings
     HOURLY_ARRIVAL_RATE = {
         0: 0.5,  1: 0.3,  2: 0.2,  3: 0.2,
         4: 0.3,  5: 0.5,  6: 1.5,  7: 3.5,
@@ -144,8 +144,8 @@ class ArrivalGenerator:
 
 if __name__ == "__main__":
     gen = ArrivalGenerator(station_id=1, n_chargers=4)
+    print("Simulated EV arrivals over 24 hours (Station 1):")
     total = 0
-    print("Simulated EV arrivals over 24 hours (NH-44 Station 1):")
     for step in range(96):
         arrivals = gen.get_arrivals(step)
         hour = step * 15 // 60

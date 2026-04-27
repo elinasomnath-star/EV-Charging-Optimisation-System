@@ -64,7 +64,7 @@ class TariffModel:
 
 if __name__ == "__main__":
     tariff = TariffModel()
-    print("BESCOM NH-44 Tariff Schedule:")
+    print("BESCOM Time-of-Day Tariff Schedule:")
     print("-" * 35)
     for hour in [0, 7, 12, 18, 23]:
         print(f"  {hour:02d}:00  Rs {tariff.get_tariff(hour):.2f}/kWh"

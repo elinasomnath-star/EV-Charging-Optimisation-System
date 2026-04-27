@@ -1,6 +1,6 @@
 # rl/train.py
 # DQN Training Loop for EVOCS
-# Trains ONE model across ALL NH-44 stations simultaneously
+# Trains ONE model across ALL stations simultaneously
 
 import numpy as np
 import os
@@ -171,7 +171,7 @@ def train(config_path: str = "config/nh44_config.yaml",
     state_dim  = env.observation_space.shape[0]
     action_dim = env.action_space.n
 
-    print("\nEVOCS DQN Training - ALL NH-44 Stations")
+    print("\nEVOCS DQN Training - ALL Stations")
     print(f"Stations : {[s['name'] for s in stations]}")
     print(f"State dim: {state_dim},  Action dim: {action_dim}")
     print(f"Episodes : {n_episodes}")

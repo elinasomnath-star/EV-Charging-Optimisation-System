@@ -1,5 +1,5 @@
 # main.py
-# EVOCS — EV Optimal Charging Scheduler for NH-44 Highway Corridor
+# EVOCS — EV Optimal Charging Scheduler for Highway Corridors
 
 import argparse
 import sys
@@ -94,7 +94,7 @@ def cmd_demo(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="EVOCS - EV Charging Scheduler for NH-44"
+        description="EVOCS - EV Charging Scheduler for Highway Corridors"
     )
     parser.add_argument("--config", default="config/nh44_config.yaml")
 
