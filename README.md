@@ -192,7 +192,7 @@ Per-Station Performance:
 │   ├── tariff_model.py           # BESCOM Time-of-Day pricing
 │   └── queue_model.py            # Priority queue (urgency-sorted)
 ├── baselines/
-│   └── schedulers.py             # Greedy, FCFS, EDF baseline policies
+│   └── schedulers.py             # Greedy, FCFS baseline policies
 ├── rl/
 │   ├── charging_env.py           # OpenAI Gym-compatible environment
 │   ├── reward.py                 # Reward function (SOC gain − cost penalty)
@@ -233,7 +233,6 @@ Based on a 100-episode evaluation across all 5 stations:
 |-----------|------------|------------|---------------|
 | FCFS (Current Apps) | 41.2 | 3.8 | ₹ 13,223 |
 | Greedy | 44.5 | 0.6 | ₹ 13,236 |
-| EDF | 43.8 | 1.2 | ₹ 6,575 |
 | **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,995** |
 
 ### Net Impact vs. Existing Systems (NH-275):

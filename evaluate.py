@@ -1,5 +1,5 @@
 # evaluate.py
-# Evaluation: DQN vs Greedy vs EDF vs FCFS
+# Evaluation: DQN vs Greedy vs FCFS
 # Generates comparison metrics for EL report
 
 import numpy as np
@@ -8,7 +8,7 @@ import os
 import torch
 from rl.charging_env import EVChargingEnv
 from rl.train import DQNAgent
-from baselines.schedulers import GreedyScheduler, EDFScheduler, FCFSScheduler
+from baselines.schedulers import GreedyScheduler, FCFSScheduler
 from models.queue_model import EVPriorityQueue
 from data.arrival_generator import ArrivalGenerator
 from models.grid_model import GridModel
@@ -145,7 +145,6 @@ def evaluate(config_path: str = "config/nh44_config.yaml",
         schedulers = {
             "FCFS (Apps)": FCFSScheduler(n_chargers, charger_kw),
             "Greedy":      GreedyScheduler(n_chargers, charger_kw),
-            "EDF":         EDFScheduler(n_chargers, charger_kw),
         }
 
         results = {}
