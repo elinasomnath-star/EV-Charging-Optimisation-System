@@ -210,34 +210,34 @@ Per-Station Performance:
 
 ## Key Results: NH-44 (Bangalore - Salem)
 
-Based on a 100-episode evaluation across all 5 stations:
+Based on a robust 500-episode evaluation across all 5 stations:
 
 | Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
 |-----------|------------|------------|---------------|
-| FCFS (Current Apps) | 38.3 | 6.7 | ₹ 9,928 |
-| Greedy | 42.9 | 2.2 | ₹ 9,938 |
+| FCFS (Current Apps) | 32.7 | 12.2 | ₹ 10,013 |
+| Greedy | 33.5 | 11.4 | ₹ 12,071 |
 | **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,957** |
 
 ### Net Impact vs. Existing Systems (NH-44):
-- **Financial Savings**: **₹ 14,856 saved per day** across the corridor.
-- **Reliability Improvement**: **33.6 fewer missed deadlines** per day.
+- **Financial Savings**: **₹ 15,281 saved per day** across the corridor.
+- **Reliability Improvement**: **61.1 fewer missed deadlines** per day.
 - **Grid Safety**: **100% compliance** with transformer KVA limits.
 
 ---
 
 ## Key Results: NH-275 (Bangalore - Mysore Expressway)
 
-Based on a 100-episode evaluation across all 5 stations:
+Based on a robust 500-episode evaluation across all 5 stations:
 
 | Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
 |-----------|------------|------------|---------------|
-| FCFS (Current Apps) | 41.2 | 3.8 | ₹ 13,223 |
-| Greedy | 44.5 | 0.6 | ₹ 13,236 |
+| FCFS (Current Apps) | 33.3 | 11.6 | ₹ 13,367 |
+| Greedy | 33.4 | 11.5 | ₹ 17,330 |
 | **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,995** |
 
 ### Net Impact vs. Existing Systems (NH-275):
-- **Financial Savings**: **₹ 31,141 saved per day** across the corridor.
-- **Reliability Improvement**: **19.2 fewer missed deadlines** per day.
+- **Financial Savings**: **₹ 31,858 saved per day** across the corridor.
+- **Reliability Improvement**: **58.2 fewer missed deadlines** per day.
 - **Grid Safety**: **100% compliance** with transformer KVA limits.
 
 ---

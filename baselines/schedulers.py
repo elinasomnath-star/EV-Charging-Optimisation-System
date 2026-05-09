@@ -9,9 +9,8 @@ from models.queue_model import EVPriorityQueue
 
 class GreedyScheduler:
     """
-    Greedy algorithm: always charge the most urgent EV first.
-    Urgency = (required SOC - current SOC) / time left
-    DAA concept: greedy choice property
+    Naive Greedy algorithm: always charge the EV with the Lowest Battery (SOC) first.
+    Ignores departure deadlines completely, representing a realistic naive station.
     """
 
     def __init__(self, n_chargers: int, max_kw: float = 7.2):
@@ -24,16 +23,12 @@ class GreedyScheduler:
         """
         Returns: {ev_id: power_kw} for this timestep
         """
-        top_evs = queue.get_top_n(self.n_chargers)
+        all_evs = queue.get_top_n(queue.size())
         schedule = {}
         remaining_kw = available_kw
 
-        # Sort by urgency descending
-        sorted_evs = sorted(
-            top_evs,
-            key=lambda ev: ev.urgency(current_step),
-            reverse=True
-        )
+        # Sort by SOC descending (Highest Battery / Shortest Job First)
+        sorted_evs = sorted(all_evs, key=lambda ev: ev.soc, reverse=True)
 
         for ev in sorted_evs:
             if remaining_kw <= 0:
@@ -60,11 +55,11 @@ class FCFSScheduler:
                  available_kw: float,
                  current_step: int) -> dict:
         """Sort by arrival time (earliest arrival first)."""
-        top_evs = queue.get_top_n(self.n_chargers * 2)
+        all_evs = queue.get_top_n(queue.size())
         schedule = {}
         remaining_kw = available_kw
 
-        sorted_evs = sorted(top_evs,
+        sorted_evs = sorted(all_evs,
                             key=lambda ev: ev.arrival_step)
 
         for ev in sorted_evs[:self.n_chargers]:
