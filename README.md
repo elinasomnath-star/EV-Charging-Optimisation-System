@@ -210,7 +210,7 @@ Per-Station Performance:
 
 ## Key Results: NH-44 (Bangalore - Salem)
 
-Based on a robust 500-episode evaluation across all 5 stations:
+Based on a robust 500-episode evaluation, the table below shows the daily performance of **one average station**:
 
 | Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
 |-----------|------------|------------|---------------|
@@ -218,7 +218,7 @@ Based on a robust 500-episode evaluation across all 5 stations:
 | Greedy | 33.5 | 11.4 | ₹ 12,071 |
 | **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,957** |
 
-### Net Impact vs. Existing Systems (NH-44):
+### Net Impact vs. Existing Systems (Entire 5-Station Corridor):
 - **Financial Savings**: **₹ 15,281 saved per day** across the corridor.
 - **Reliability Improvement**: **61.1 fewer missed deadlines** per day.
 - **Grid Safety**: **100% compliance** with transformer KVA limits.
@@ -227,7 +227,7 @@ Based on a robust 500-episode evaluation across all 5 stations:
 
 ## Key Results: NH-275 (Bangalore - Mysore Expressway)
 
-Based on a robust 500-episode evaluation across all 5 stations:
+Based on a robust 500-episode evaluation, the table below shows the daily performance of **one average station**:
 
 | Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
 |-----------|------------|------------|---------------|
@@ -235,7 +235,7 @@ Based on a robust 500-episode evaluation across all 5 stations:
 | Greedy | 33.4 | 11.5 | ₹ 17,330 |
 | **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 6,995** |
 
-### Net Impact vs. Existing Systems (NH-275):
+### Net Impact vs. Existing Systems (Entire 5-Station Corridor):
 - **Financial Savings**: **₹ 31,858 saved per day** across the corridor.
 - **Reliability Improvement**: **58.2 fewer missed deadlines** per day.
 - **Grid Safety**: **100% compliance** with transformer KVA limits.
