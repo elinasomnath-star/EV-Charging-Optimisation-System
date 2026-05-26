@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVOCS Model Results Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar panel">
+            <div class="brand-lockup">
+                <div class="brand-mark" aria-hidden="true">
+                    <span></span>
+                </div>
+                <div>
+                    <p class="eyebrow">Deep Q-Network Corridor Control</p>
+                    <h1>EVOCS Model Results</h1>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="corridor-chip" id="corridor-name">Awaiting corridor</div>
+                <button id="start-btn" class="primary-btn" type="button">Run Model</button>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <section class="hero-panel panel">
+                <div class="hero-copy">
+                    <p class="eyebrow">Formal Simulation Console</p>
+                    <h2>Live charging decisions across a highway EV corridor</h2>
+                    <p class="hero-text">The interface streams the trained EVOCS scheduler output and visualizes routing, station queues, charging reliability, operating cost, and reward accumulation.</p>
+                </div>
+                <div class="model-card">
+                    <div class="model-card__top">
+                        <span>MODEL.CO</span>
+                        <strong id="model-state">STANDBY</strong>
+                    </div>
+                    <div class="model-pulse" aria-hidden="true"></div>
+                    <div class="model-grid">
+                        <div>
+                            <span>Policy</span>
+                            <strong>DQN EVOCS</strong>
+                        </div>
+                        <div>
+                            <span>Step</span>
+                            <strong><b id="current-step">0</b><small id="total-steps">/ 96</small></strong>
+                        </div>
+                        <div>
+                            <span>Time</span>
+                            <strong id="current-hour">0.0h</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="kpi-strip">
+                <article class="kpi-card panel">
+                    <span>Total EVs Served</span>
+                    <strong id="kpi-served">0</strong>
+                    <small>Completed before deadline</small>
+                </article>
+                <article class="kpi-card panel">
+                    <span>Deadlines Missed</span>
+                    <strong class="danger" id="kpi-missed">0</strong>
+                    <small>Reliability risk</small>
+                </article>
+                <article class="kpi-card panel">
+                    <span>Total Cost</span>
+                    <strong><small>Rs</small> <b id="kpi-cost">0</b></strong>
+                    <small>Tariff-aware spend</small>
+                </article>
+                <article class="kpi-card panel">
+                    <span>Total Reward</span>
+                    <strong class="accent" id="kpi-reward">0.0</strong>
+                    <small>Policy objective score</small>
+                </article>
+            </section>
+
+            <section class="content-grid">
+                <aside class="panel feed-panel">
+                    <div class="section-heading">
+                        <p class="eyebrow">Telemetry</p>
+                        <h2>Live Model Feed</h2>
+                    </div>
+                    <div class="status-stack">
+                        <div class="status-row">
+                            <span>Simulation Step</span>
+                            <strong><b id="side-current-step">0</b> <small id="side-total-steps">/ 96</small></strong>
+                        </div>
+                        <div class="status-row">
+                            <span>Simulated Time</span>
+                            <strong id="side-current-hour">0.0h</strong>
+                        </div>
+                    </div>
+                    <div class="event-log-container">
+                        <h3>Recent Routing Decisions</h3>
+                        <ul class="event-log" id="event-log">
+                            <li class="log-entry placeholder">Waiting for the model run...</li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <section class="panel network-panel">
+                    <div class="section-heading inline">
+                        <div>
+                            <p class="eyebrow">Station Network</p>
+                            <h2>Corridor Charging Nodes</h2>
+                        </div>
+                        <span class="run-badge" id="run-badge">Ready</span>
+                    </div>
+                    <div class="stations-container" id="stations-container">
+                        <div class="loading-state">Awaiting station configuration</div>
+                    </div>
+                </section>
+            </section>
+
+            <section class="panel results-panel" id="final-results">
+                <div class="section-heading inline">
+                    <div>
+                        <p class="eyebrow">Final Report</p>
+                        <h2>Station-Level Model Results</h2>
+                    </div>
+                    <span class="run-badge muted">DQN vs operational constraints</span>
+                </div>
+                <div class="table-container">
+                    <table class="metrics-table">
+                        <thead>
+                            <tr>
+                                <th>Station</th>
+                                <th>Served</th>
+                                <th>Missed</th>
+                                <th>Cost</th>
+                                <th>Reward</th>
+                                <th>Grid Violations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metrics-table-body">
+                            <tr>
+                                <td colspan="6">Run the model to generate station results.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
