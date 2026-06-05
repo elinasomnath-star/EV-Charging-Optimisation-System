@@ -1,17 +1,17 @@
 :root {
-    --bg: #030507;
-    --panel: rgba(7, 13, 18, 0.88);
-    --panel-strong: rgba(10, 18, 24, 0.96);
-    --line: rgba(120, 255, 232, 0.18);
-    --line-strong: rgba(120, 255, 232, 0.36);
-    --neon: #58ffe5;
-    --neon-green: #8dff75;
-    --neon-blue: #48a8ff;
-    --danger: #ff5571;
-    --warning: #ffd166;
-    --text: #ecfff9;
-    --muted: #8fa9a5;
-    --shadow: 0 0 42px rgba(88, 255, 229, 0.12);
+    --bg: #F5F5F5;
+    --panel: #FFFFFF;
+    --panel-strong: #FFFFFF;
+    --line: rgba(118, 171, 174, 0.35);
+    --line-strong: rgba(118, 171, 174, 0.7);
+    --neon: #76ABAE;
+    --neon-green: #76ABAE;
+    --neon-blue: #76ABAE;
+    --danger: #FF5722;
+    --warning: #f4a261;
+    --text: #303841;
+    --muted: #6c7a89;
+    --shadow: 0 4px 20px rgba(48, 56, 65, 0.05);
 }
 
 * {
@@ -29,12 +29,10 @@ body {
     color: var(--text);
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background:
-        linear-gradient(rgba(88, 255, 229, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(88, 255, 229, 0.05) 1px, transparent 1px),
-        radial-gradient(circle at 18% 12%, rgba(72, 168, 255, 0.18), transparent 32%),
-        radial-gradient(circle at 86% 20%, rgba(141, 255, 117, 0.12), transparent 28%),
-        #030507;
-    background-size: 36px 36px, 36px 36px, auto, auto, auto;
+        linear-gradient(rgba(118, 171, 174, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(118, 171, 174, 0.08) 1px, transparent 1px),
+        var(--bg);
+    background-size: 32px 32px, 32px 32px;
     overflow-x: hidden;
 }
 
@@ -43,7 +41,7 @@ body::before {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background: linear-gradient(180deg, rgba(3, 5, 7, 0.2), rgba(3, 5, 7, 0.88));
+    background: linear-gradient(180deg, rgba(245, 245, 245, 0.2), rgba(245, 245, 245, 0.88));
     z-index: -1;
 }
 
@@ -176,14 +174,14 @@ h3 {
 
 .primary-btn {
     min-height: 42px;
-    border: 1px solid rgba(88, 255, 229, 0.58);
+    border: none;
     border-radius: 8px;
     padding: 0 20px;
-    color: #00110e;
-    background: linear-gradient(135deg, var(--neon), var(--neon-green));
+    color: #FFFFFF;
+    background: var(--neon);
     font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 0 28px rgba(88, 255, 229, 0.28);
+    box-shadow: 0 4px 12px rgba(118, 171, 174, 0.3);
     transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 

@@ -14,6 +14,10 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route('/visualization')
+def visualization():
+    return render_template('visualization.html')
+
 @app.route('/api/simulation/stream')
 def stream_simulation():
     def generate():
