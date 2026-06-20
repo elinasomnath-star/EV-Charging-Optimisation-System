@@ -417,9 +417,83 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        #ev-inspector {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(118, 171, 174, 0.4);
+            border-radius: 12px;
+            padding: 16px;
+            width: 280px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            font-family: 'Inter', sans-serif;
+            transform: translate(15px, 15px);
+            transition: opacity 0.2s ease;
+        }
+        .inspector-header {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--text);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .inspector-badge {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            background: var(--neon);
+            color: white;
+            border-radius: 4px;
+        }
+        .inspector-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .inspector-row strong {
+            color: var(--text);
+            font-family: "JetBrains Mono", monospace;
+        }
+        .inspector-ai-log {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(118, 171, 174, 0.1);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text);
+            line-height: 1.4;
+            border-left: 3px solid var(--neon);
+        }
+        .inspector-ai-log strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--neon);
+            font-weight: 800;
+        }
     </style>
 </head>
 <body>
+    <div id="ev-inspector">
+        <div class="inspector-header">
+            <span id="insp-model">Model</span>
+            <span class="inspector-badge" id="insp-id">#123</span>
+        </div>
+        <div class="inspector-row"><span>Battery (SOC):</span><strong id="insp-soc">0%</strong></div>
+        <div class="inspector-row"><span>State:</span><strong id="insp-state">Driving</strong></div>
+        <div class="inspector-row"><span>Target:</span><strong id="insp-target">None</strong></div>
+        <div class="inspector-ai-log">
+            <strong>AI Routing Logic</strong>
+            <span id="insp-log">...</span>
+        </div>
+    </div>
     <div class="app-shell">
         <header class="topbar panel">
             <div class="brand-lockup">
@@ -435,6 +509,8 @@
                 <select id="highway-selector" class="highway-select">
                     <option value="nh44">NH-44 Expressway (200km)</option>
                     <option value="nh275">NH-275 Expressway (150km)</option>
+                    <option value="nh48">NH-48 Expressway (260km)</option>
+                    <option value="nh16">NH-16 Expressway (450km)</option>
                 </select>
             </div>
         </header>
@@ -554,6 +630,30 @@
                         { name: 'Mandya JioBP', km: 105, operator: 'JioBP', nChargers: 4, chargerKw: 60, color: '#76ABAE', labelY: 130 },
                         { name: 'Srirangapatna Zeon', km: 130, operator: 'Zeon', nChargers: 2, chargerKw: 50, color: '#76ABAE', labelY: 70 }
                     ]
+                },
+                'nh48': {
+                    lengthKm: 260,
+                    origin: 'DELHI',
+                    destination: 'JAIPUR',
+                    stations: [
+                        { name: 'Gurugram ChargeZone', km: 35, operator: 'ChargeZone', nChargers: 4, chargerKw: 60, color: '#76ABAE', labelY: 70 },
+                        { name: 'Rewari TataPower', km: 90, operator: 'TataPower', nChargers: 3, chargerKw: 30, color: '#76ABAE', labelY: 130 },
+                        { name: 'Behror Statiq', km: 135, operator: 'Statiq', nChargers: 4, chargerKw: 50, color: '#76ABAE', labelY: 70 },
+                        { name: 'Kotputli JioBP', km: 170, operator: 'JioBP', nChargers: 2, chargerKw: 60, color: '#76ABAE', labelY: 130 },
+                        { name: 'Shahpura Zeon', km: 215, operator: 'Zeon', nChargers: 3, chargerKw: 50, color: '#76ABAE', labelY: 70 }
+                    ]
+                },
+                'nh16': {
+                    lengthKm: 450,
+                    origin: 'CHENNAI',
+                    destination: 'VIJAYAWADA',
+                    stations: [
+                        { name: 'Gummidipoondi Zeon', km: 50, operator: 'Zeon', nChargers: 2, chargerKw: 50, color: '#76ABAE', labelY: 70 },
+                        { name: 'Naidupeta TataPower', km: 130, operator: 'TataPower', nChargers: 4, chargerKw: 60, color: '#76ABAE', labelY: 130 },
+                        { name: 'Nellore Statiq', km: 175, operator: 'Statiq', nChargers: 3, chargerKw: 30, color: '#76ABAE', labelY: 70 },
+                        { name: 'Ongole ChargeZone', km: 300, operator: 'ChargeZone', nChargers: 4, chargerKw: 60, color: '#76ABAE', labelY: 130 },
+                        { name: 'Guntur JioBP', km: 410, operator: 'JioBP', nChargers: 2, chargerKw: 50, color: '#76ABAE', labelY: 70 }
+                    ]
                 }
             };
 
@@ -568,6 +668,8 @@
             let currentHighway = null;
             let stations = [];
             let evList = []; 
+            let selectedEV = null;
+            const evInspector = document.getElementById('ev-inspector');
 
             const canvasPadding = 60;
             const roadY = 400;
@@ -668,32 +770,41 @@
             }
 
             function routeEV(ev) {
-                let targetIdx = 0;
-                if (ev.soc < 25) {
-                    targetIdx = 0; 
-                } else if (ev.soc > 70) {
-                    const candidates = [];
-                    // Distribute high SOC to farther half of stations
-                    for(let i = Math.floor(stations.length/2); i < stations.length; i++) candidates.push(i);
-                    candidates.sort((a, b) => stations[a].queue.length - stations[b].queue.length);
-                    targetIdx = candidates[0];
-                } else {
-                    let bestScore = Infinity;
-                    for (let i = 0; i < stations.length; i++) {
-                        const distance = stations[i].km;
-                        const queueLength = stations[i].queue.length;
-                        const activeCount = stations[i].chargers.filter(c => c !== null).length;
-                        
-                        const score = distance * 0.8 + queueLength * 45 + activeCount * 10;
-                        if (score < bestScore) {
-                            bestScore = score;
-                            targetIdx = i;
-                        }
-                    }
+                // Calculate max distance this EV can travel before hitting 0% SOC
+                // Typical EV goes ~250km on 100% SOC.
+                const maxRangeKm = (ev.soc / 100) * 250;
+                
+                // Find reachable stations with a safety buffer of 5km
+                let reachableStations = stations.filter(st => st.km <= maxRangeKm - 5);
+                
+                if (reachableStations.length === 0) {
+                    // If no station is strictly reachable, attempt to reach the very first one
+                    reachableStations = [stations[0]];
                 }
+                
+                let targetIdx = reachableStations[0].idx;
+                let bestScore = -Infinity;
+                let bestLog = "";
+                
+                reachableStations.forEach(st => {
+                    // Distribute cars evenly by rewarding driving further, 
+                    // but severely penalizing long queues and active chargers.
+                    const distanceReward = (st.km / maxRangeKm) * 100; 
+                    const queuePenalty = st.queue.length * 40;
+                    const activeCountPenalty = st.chargers.filter(c => c !== null).length * 10;
+                    
+                    const score = distanceReward - queuePenalty - activeCountPenalty;
+                    
+                    if (score > bestScore) {
+                        bestScore = score;
+                        targetIdx = st.idx;
+                        bestLog = `Routed to ${st.name} (Score: ${Math.round(score)}). +${Math.round(distanceReward)} for distance, -${queuePenalty} for queue length, -${activeCountPenalty} for active chargers.`;
+                    }
+                });
                 
                 ev.targetStationIdx = targetIdx;
                 ev.beamAlpha = 1.0; 
+                ev.aiLog = bestLog;
             }
 
             // Smooth ARC Steering Logic for Natural Movement
@@ -785,10 +896,22 @@
                             ev.y += Math.sin(ev.angle) * ev.effectiveSpeed * timeMultiplier;
                             ev.y += (roadY + roadHeight * 0.7 - ev.y) * 0.1 * timeMultiplier;
                             
-                            const turnOffX = station.x - 80; 
-                            if (ev.x >= turnOffX) {
-                                ev.state = 'turning_in';
+                            const distanceMoved = ev.effectiveSpeed * timeMultiplier;
+                            ev.soc -= (distanceMoved * 0.015);
+                            
+                            if (ev.soc <= 0) {
+                                ev.soc = 0;
+                                ev.state = 'stranded';
+                            } else {
+                                const turnOffX = station.x - 80; 
+                                if (ev.x >= turnOffX) {
+                                    ev.state = 'turning_in';
+                                }
                             }
+                            break;
+                            
+                        case 'stranded':
+                            // Vehicle is out of battery and stays still
                             break;
                             
                         case 'turning_in':
@@ -1192,12 +1315,12 @@
                 // Draw EVs
                 evList.forEach(ev => {
                     if (ev.x > -40 && ev.x < canvas.width + 40) {
-                        drawCar(ctx, ev.x, ev.y, ev.angle, ev.color, ev.soc, ev.model, ev.state, ev.chargerIdx);
+                        drawCar(ctx, ev.x, ev.y, ev.angle, ev.color, ev.soc, ev.model, ev.state, ev.chargerIdx, selectedEV && ev.id === selectedEV.id);
                     }
                 });
             }
 
-            function drawCar(c, x, y, angle, color, soc, model, state, chargerIdx = -1) {
+            function drawCar(c, x, y, angle, color, soc, model, state, chargerIdx = -1, isSelected = false) {
                 const width = 30;
                 const height = 15;
 
@@ -1281,12 +1404,29 @@
                     c.fillText('⚡', x, y + 5);
                 }
 
-                if (soc < 25 && state !== 'charging') {
+                if (state === 'stranded') {
+                    const pulse = Math.abs(Math.sin(Date.now() / 150));
+                    c.fillStyle = `rgba(255, 0, 0, ${0.5 + pulse * 0.5})`;
+                    c.font = 'bold 12px Arial';
+                    c.textAlign = 'center';
+                    c.fillText('SOS', x, y - 10);
+                } else if (soc < 25 && state !== 'charging') {
                     c.strokeStyle = 'rgba(255, 87, 34, ' + (0.4 + 0.6 * Math.abs(Math.sin(Date.now() / 200))) + ')';
                     c.lineWidth = 2;
                     c.beginPath();
                     c.arc(x, y, 16, 0, Math.PI * 2);
                     c.stroke();
+                }
+
+                if (isSelected) {
+                    c.strokeStyle = 'rgba(118, 171, 174, ' + (0.6 + 0.4 * Math.abs(Math.sin(Date.now() / 150))) + ')';
+                    c.lineWidth = 3;
+                    c.beginPath();
+                    c.arc(x, y, 22, 0, Math.PI * 2);
+                    c.stroke();
+                    
+                    c.fillStyle = 'rgba(118, 171, 174, 0.2)';
+                    c.fill();
                 }
             }
 
@@ -1364,8 +1504,58 @@
                 updateSimulation();
                 draw();
                 updateStationGridUI();
+                
+                if (selectedEV) {
+                    // Update DOM
+                    document.getElementById('insp-model').textContent = selectedEV.model;
+                    document.getElementById('insp-id').textContent = '#' + selectedEV.id;
+                    document.getElementById('insp-soc').textContent = Math.max(0, Math.floor(selectedEV.soc)) + '%';
+                    document.getElementById('insp-state').textContent = selectedEV.state.charAt(0).toUpperCase() + selectedEV.state.slice(1).replace('_', ' ');
+                    document.getElementById('insp-target').textContent = selectedEV.targetStationIdx >= 0 ? stations[selectedEV.targetStationIdx].name : 'None';
+                    document.getElementById('insp-log').textContent = selectedEV.aiLog || 'No log available.';
+                    
+                    // Position tooltip near the car
+                    const rect = canvas.getBoundingClientRect();
+                    const scaleX = rect.width / canvas.width;
+                    const scaleY = rect.height / canvas.height;
+                    
+                    const screenX = rect.left + selectedEV.x * scaleX;
+                    const screenY = rect.top + selectedEV.y * scaleY;
+                    
+                    evInspector.style.left = (screenX + 20) + 'px';
+                    evInspector.style.top = (screenY - 20) + 'px';
+                    
+                    // Hide if off screen
+                    if (selectedEV.x > canvas.width + 40 || selectedEV.x < -40) {
+                        evInspector.style.display = 'none';
+                        selectedEV = null;
+                    }
+                }
+                
                 requestAnimationFrame(gameLoop);
             }
+
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const clickX = (e.clientX - rect.left) * scaleX;
+                const clickY = (e.clientY - rect.top) * scaleY;
+                
+                let clickedAny = false;
+                for (let ev of evList) {
+                    if (Math.hypot(ev.x - clickX, ev.y - clickY) < 30) {
+                        selectedEV = ev;
+                        clickedAny = true;
+                        evInspector.style.display = 'block';
+                        break;
+                    }
+                }
+                if (!clickedAny) {
+                    selectedEV = null;
+                    evInspector.style.display = 'none';
+                }
+            });
 
             playPauseBtn.addEventListener('click', () => {
                 isRunning = !isRunning;

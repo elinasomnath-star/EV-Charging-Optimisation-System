@@ -113,7 +113,25 @@ pip install -r requirements.txt
 
 ## Usage
 
-EVOCS supports multiple highway corridors via configuration files. 
+### Live 2D Web Visualization Dashboard
+
+EVOCS features an interactive real-time 2D web dashboard to visualize the AI-guided routing and scheduling simulation across the highway corridors.
+
+**Run the web dashboard:**
+```bash
+python app.py
+```
+Open your browser and navigate to `http://127.0.0.1:5000/visualization` to view the interactive simulation.
+
+#### Dashboard Features:
+- **Live Simulation Canvas:** Watch EVs travel along the highway and intelligently route to the optimal station.
+- **Dynamic Controls:** Pause/resume and adjust the simulation speed (1x, 2x, 4x).
+- **Custom EV Spawning:** Spawn specific EV models (Nexon EV, MG ZS, Kona, etc.) with custom battery levels (SOC) and watch the guidance system react.
+- **Real-Time KPIs:** Track total EVs served, active charging sessions, and the dynamic BESCOM Time-of-Day electricity tariff.
+
+### CLI Commands
+
+EVOCS also provides CLI options for training, offline simulation, and evaluation. It supports multiple highway corridors via configuration files.
 
 **Train the DQN agent:**
 ```bash
