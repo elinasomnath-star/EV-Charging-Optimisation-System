@@ -199,7 +199,9 @@ Per-Station Performance:
 .
 ├── config/
 │   ├── nh44_config.yaml          # NH-44 Station hardware & simulation config
-│   └── nh275_config.yaml         # NH-275 Expressway configuration
+│   ├── nh275_config.yaml         # NH-275 Expressway configuration
+│   ├── nh48_config.yaml          # NH-48 Expressway configuration
+│   └── nh75_config.yaml          # NH-75 Expressway configuration
 ├── data/
 │   └── arrival_generator.py      # Stochastic EV arrival model (ToD-weighted)
 ├── models/
@@ -259,3 +261,36 @@ Based on a robust 500-episode evaluation, the table below shows the daily perfor
 - **Grid Safety**: **100% compliance** with transformer KVA limits.
 
 ---
+
+## Key Results: NH-48 (Bangalore - Hubli)
+
+Based on a robust 100-episode evaluation, the table below shows the daily performance of **one average station**:
+
+| Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
+|-----------|------------|------------|---------------|
+| FCFS (Current Apps) | 35.2 | 9.8 | ₹ 14,611 |
+| Greedy | 36.5 | 8.6 | ₹ 19,676 |
+| **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 9,834** |
+
+### Net Impact vs. Existing Systems (Entire 5-Station Corridor):
+- **Financial Savings**: **₹ 23,883 saved per day** across the corridor.
+- **Reliability Improvement**: **49.1 fewer missed deadlines** per day.
+- **Grid Safety**: **100% compliance** with transformer KVA limits.
+
+---
+
+## Key Results: NH-75 (Bangalore - Mangalore)
+
+Based on a robust 100-episode evaluation, the table below shows the daily performance of **one average station**:
+
+| Algorithm | Avg Served | Avg Missed | Avg Cost (Rs) |
+|-----------|------------|------------|---------------|
+| FCFS (Current Apps) | 34.9 | 10.2 | ₹ 14,609 |
+| Greedy | 36.3 | 8.8 | ₹ 19,676 |
+| **DQN (EVOCS)** | **39.0** | **0.0** | **₹ 10,078** |
+
+### Net Impact vs. Existing Systems (Entire 5-Station Corridor):
+- **Financial Savings**: **₹ 22,652 saved per day** across the corridor.
+- **Reliability Improvement**: **51.0 fewer missed deadlines** per day.
+- **Grid Safety**: **100% compliance** with transformer KVA limits.
+

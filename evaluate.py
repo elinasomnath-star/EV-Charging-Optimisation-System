@@ -190,7 +190,7 @@ def evaluate(config_path: str = "config/nh44_config.yaml",
               f"{'Cost(Rs)':>10} {'Grid Viol':>10}")
         print("-" * 60)
         for name, r in results.items():
-            marker = " ◄" if name == "DQN (EVOCS)" else ""
+            marker = " *" if name == "DQN (EVOCS)" else ""
             print(f"{name:<18} {r['evs_served']:>8.1f} "
                   f"{r['deadlines_missed']:>8.1f} "
                   f"{r['total_cost_rs']:>10.1f} "
@@ -230,7 +230,7 @@ def evaluate(config_path: str = "config/nh44_config.yaml",
         print(f"{'Algorithm':<18} {'Avg Served':>12} {'Avg Missed':>12} {'Avg Cost(Rs)':>15}")
         print("-" * 80)
         for name, r in avg_results.items():
-            marker = " ◄" if name == "DQN (EVOCS)" else ""
+            marker = " *" if name == "DQN (EVOCS)" else ""
             print(f"{name:<18} {r['evs_served']:>12.1f} {r['deadlines_missed']:>12.1f} {r['total_cost_rs']:>15.1f}{marker}")
 
         dqn_v_fcfs_cost = avg_results["FCFS (Apps)"]["total_cost_rs"] - avg_results["DQN (EVOCS)"]["total_cost_rs"]
