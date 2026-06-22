@@ -158,6 +158,16 @@ def run_simulation_generator(config_path="config/nh44_config.yaml", model_path=N
             
             queue_size = env.queue.size()
             
+            # Extract internal data structures for UI
+            queue_details = []
+            for ev in env.queue.get_top_n(min(6, queue_size)):
+                queue_details.append({
+                    "id": ev.ev_id,
+                    "soc": round(ev.soc * 100, 1),
+                    "urgency": round(ev.urgency(step), 3),
+                    "deadline": ev.deadline_step - step
+                })
+                
             if queue_size == 0:
                 action_name = "Hold (Empty Queue)"
             elif 1 <= action <= 8:
@@ -173,6 +183,9 @@ def run_simulation_generator(config_path="config/nh44_config.yaml", model_path=N
             station_metrics[i]["violations"] = int(info["grid_violations"])
             station_metrics[i]["action"] = action_name
             station_metrics[i]["queue_size"] = queue_size
+            station_metrics[i]["queue_details"] = queue_details
+            station_metrics[i]["state_vector"] = [round(float(x), 3) for x in obs]
+            station_metrics[i]["grid_util"] = round(float(env.grid_model.utilization([], hour)), 3)
             
             if step % 4 == 0:
                 tariff_label = env.tariff_model.get_label(hour)
