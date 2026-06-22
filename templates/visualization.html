@@ -558,6 +558,11 @@
                                 <small style="display: block; margin-top: 4px;">Completed and departed corridor</small>
                             </div>
                             <div class="status-row">
+                                <span>Missed Deadlines</span>
+                                <strong id="kpi-missed" style="font-size: 2.6rem; color: var(--danger);">0</strong>
+                                <small style="display: block; margin-top: 4px;">Failed to charge in time</small>
+                            </div>
+                            <div class="status-row">
                                 <span>Active Charging Right Now</span>
                                 <strong id="kpi-active" style="font-size: 2.6rem; color: var(--neon);">0</strong>
                                 <small style="display: block; margin-top: 4px;">Currently plugged into DC charger slots</small>
@@ -595,6 +600,7 @@
             const speedSelector = document.getElementById('speed-selector');
             const highwaySelector = document.getElementById('highway-selector');
             const kpiServed = document.getElementById('kpi-served');
+            const kpiMissed = document.getElementById('kpi-missed');
             const kpiActive = document.getElementById('kpi-active');
             const timeDisplay = document.getElementById('time-display');
             const tariffDisplay = document.getElementById('tariff-display');
@@ -604,6 +610,23 @@
             let timeMultiplier = 1; 
             let totalServedCount = 0;
             let simHour = 8.0; 
+            
+            let globalRlMetrics = [];
+            let globalTotalMissed = 0;
+
+            const evtSource = new EventSource("/api/simulation/stream");
+            evtSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    if (data.type === "step" && data.metrics) {
+                        globalRlMetrics = data.metrics;
+                        let missed = 0;
+                        data.metrics.forEach(m => missed += m.missed);
+                        globalTotalMissed = missed;
+                        if (kpiMissed) kpiMissed.textContent = globalTotalMissed;
+                    }
+                } catch(e) {}
+            };
 
             // Configurable Highways
             const highwaysConfig = {
@@ -1470,6 +1493,7 @@
                 stations.forEach(st => {
                     const activeCount = st.chargers.filter(c => c !== null).length;
                     const isOccupied = activeCount > 0;
+                    const rlData = globalRlMetrics.length > st.idx ? globalRlMetrics[st.idx] : null;
                     
                     const card = document.createElement('div');
                     card.className = `station-card-vis ${isOccupied ? 'active-charging' : ''}`;
@@ -1480,20 +1504,24 @@
                             <span class="station-km-badge">${st.km} km</span>
                         </div>
                         <div class="station-stat-row">
-                            <span>Operator:</span>
-                            <strong>${st.operator}</strong>
+                            <span>RL Action:</span>
+                            <strong style="color: var(--neon); background: rgba(118,171,174,0.1); padding: 2px 8px; border-radius: 4px;">${rlData ? rlData.action : 'Waiting...'}</strong>
                         </div>
                         <div class="station-stat-row">
-                            <span>Charging:</span>
-                            <strong>${activeCount} / ${st.nChargers} slots</strong>
+                            <span>Cost / Reward:</span>
+                            <strong>₹${rlData ? Math.round(rlData.cost) : 0} / <span style="color: #4CAF50">${rlData ? Math.round(rlData.reward) : 0}</span></strong>
+                        </div>
+                        <div class="station-stat-row">
+                            <span>Served/Missed:</span>
+                            <strong>${rlData ? rlData.served : 0} / <span style="color: var(--danger);">${rlData ? rlData.missed : 0}</span></strong>
                         </div>
                         <div class="station-stat-row">
                             <span>Queue:</span>
                             <strong style="color: ${st.queue.length > 0 ? 'var(--danger)' : 'var(--text)'};">${st.queue.length} waiting</strong>
                         </div>
                         <div class="station-stat-row">
-                            <span>Speed:</span>
-                            <strong>${st.chargerKw} kW DC</strong>
+                            <span>Charging:</span>
+                            <strong>${activeCount} / ${st.nChargers} slots</strong>
                         </div>
                     `;
                     stationInfoGrid.appendChild(card);

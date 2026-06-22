@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EVOCS — Highway Corridor Live 2D Simulation</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg: #F5F5F5;
             --neon: #76ABAE;
             --text: #303841;
             --danger: #FF5722;
-            
+
             --panel: #FFFFFF;
             --panel-strong: #FFFFFF;
-            --line: rgba(118, 171, 174, 0.35); 
+            --line: rgba(118, 171, 174, 0.35);
             --line-strong: rgba(118, 171, 174, 0.7);
             --warning: #f4a261;
             --muted: #6c7a89;
             --shadow: 0 4px 20px rgba(48, 56, 65, 0.05);
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         html {
             min-height: 100%;
@@ -36,7 +41,7 @@
             color: var(--text);
             font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
             background: var(--bg);
-            background-image: 
+            background-image:
                 linear-gradient(rgba(118, 171, 174, 0.08) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(118, 171, 174, 0.08) 1px, transparent 1px);
             background-size: 32px 32px;
@@ -71,7 +76,9 @@
             align-items: center;
         }
 
-        .brand-lockup { gap: 18px; }
+        .brand-lockup {
+            gap: 18px;
+        }
 
         .brand-mark {
             width: 52px;
@@ -101,7 +108,12 @@
             text-transform: uppercase;
         }
 
-        h1, h2, h3, p { margin-top: 0; }
+        h1,
+        h2,
+        h3,
+        p {
+            margin-top: 0;
+        }
 
         h1 {
             margin-bottom: 0;
@@ -217,7 +229,7 @@
             gap: 24px;
             width: 100%;
         }
-        
+
         .canvas-card {
             position: relative;
             background: #FFFFFF;
@@ -275,6 +287,7 @@
             transition: all 120ms ease;
             font-family: "JetBrains Mono", monospace;
         }
+
         .btn-group button:last-child {
             border-right: none;
         }
@@ -329,9 +342,17 @@
         }
 
         @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.3); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 87, 34, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 87, 34, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.3);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 87, 34, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+            }
         }
 
         .station-grid-vis {
@@ -411,7 +432,7 @@
             color: var(--neon);
             margin-bottom: 4px;
         }
-        
+
         @media (max-width: 1050px) {
             .panel-grid {
                 grid-template-columns: 1fr;
@@ -426,7 +447,7 @@
             border-radius: 12px;
             padding: 16px;
             width: 280px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             pointer-events: none;
             display: none;
             z-index: 1000;
@@ -434,6 +455,7 @@
             transform: translate(15px, 15px);
             transition: opacity 0.2s ease;
         }
+
         .inspector-header {
             font-weight: 800;
             font-size: 1.1rem;
@@ -445,6 +467,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .inspector-badge {
             font-size: 0.8rem;
             padding: 2px 6px;
@@ -452,16 +475,19 @@
             color: white;
             border-radius: 4px;
         }
+
         .inspector-row {
             display: flex;
             justify-content: space-between;
             font-size: 0.9rem;
             margin-bottom: 6px;
         }
+
         .inspector-row strong {
             color: var(--text);
             font-family: "JetBrains Mono", monospace;
         }
+
         .inspector-ai-log {
             margin-top: 10px;
             padding: 10px;
@@ -472,6 +498,7 @@
             line-height: 1.4;
             border-left: 3px solid var(--neon);
         }
+
         .inspector-ai-log strong {
             display: block;
             margin-bottom: 4px;
@@ -480,6 +507,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="ev-inspector">
         <div class="inspector-header">
@@ -518,9 +546,10 @@
         <main class="dashboard">
             <div class="vis-container">
                 <section class="canvas-card" style="overflow-x: auto;">
-                    <canvas id="simCanvas" width="1800" height="540" style="display: block; width: 100%; min-width: 1200px; height: auto;"></canvas>
+                    <canvas id="simCanvas" width="1800" height="540"
+                        style="display: block; width: 100%; min-width: 1200px; height: auto;"></canvas>
                 </section>
-                
+
                 <div class="vis-controls-row">
                     <div class="controls-group">
                         <button id="play-pause-btn" class="primary-btn" style="min-width: 120px;">Pause</button>
@@ -530,8 +559,10 @@
                             <button data-speed="4">4x</button>
                         </div>
                     </div>
-                    <div class="controls-group" style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; gap: 12px;">
-                        <select id="spawn-model" style="border: none; background: transparent; outline: none; font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
+                    <div class="controls-group"
+                        style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 8px; padding: 4px 12px; gap: 12px;">
+                        <select id="spawn-model"
+                            style="border: none; background: transparent; outline: none; font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
                             <option value="random">Random Model</option>
                             <option value="Nexon EV">Nexon EV</option>
                             <option value="MG ZS">MG ZS</option>
@@ -539,8 +570,10 @@
                             <option value="Tigor">Tigor</option>
                             <option value="Ola S1">Ola S1</option>
                         </select>
-                        <input type="number" id="spawn-soc" placeholder="SOC %" min="1" max="100" style="width: 80px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
-                        <button id="spawn-btn" class="primary-btn" style="background: var(--danger); min-height: 36px; padding: 0 16px;">Spawn EV</button>
+                        <input type="number" id="spawn-soc" placeholder="SOC %" min="1" max="100"
+                            style="width: 80px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.95rem;">
+                        <button id="spawn-btn" class="primary-btn"
+                            style="background: var(--danger); min-height: 36px; padding: 0 16px;">Spawn EV</button>
                     </div>
                 </div>
 
@@ -550,7 +583,7 @@
                             <p class="eyebrow">IoT Overlay</p>
                             <h2 style="font-size: 1.8rem;">AI Guidance Stats</h2>
                         </div>
-                        
+
                         <div class="status-stack" style="gap: 16px;">
                             <div class="status-row">
                                 <span>Total Served Today</span>
@@ -560,7 +593,8 @@
                             <div class="status-row">
                                 <span>Active Charging Right Now</span>
                                 <strong id="kpi-active" style="font-size: 2.6rem; color: var(--neon);">0</strong>
-                                <small style="display: block; margin-top: 4px;">Currently plugged into DC charger slots</small>
+                                <small style="display: block; margin-top: 4px;">Currently plugged into DC charger
+                                    slots</small>
                             </div>
                             <div class="status-row" id="tariff-row">
                                 <span>BESCOM Tariff & Time</span>
@@ -599,11 +633,11 @@
             const timeDisplay = document.getElementById('time-display');
             const tariffDisplay = document.getElementById('tariff-display');
             const stationInfoGrid = document.getElementById('station-info-grid');
-            
+
             let isRunning = true;
-            let timeMultiplier = 1; 
+            let timeMultiplier = 1;
             let totalServedCount = 0;
-            let simHour = 8.0; 
+            let simHour = 8.0;
 
             // Configurable Highways
             const highwaysConfig = {
@@ -658,16 +692,16 @@
             };
 
             const evModels = [
-                { name: 'Nexon EV', batteryKwh: 40.5, color: '#303841' }, 
-                { name: 'MG ZS', batteryKwh: 50.3, color: '#76ABAE' },    
-                { name: 'Kona', batteryKwh: 39.2, color: '#FF5722' },     
-                { name: 'Tigor', batteryKwh: 24.0, color: '#6c7a89' },    
-                { name: 'Ola S1', batteryKwh: 4.0, color: '#f4a261' }     
+                { name: 'Nexon EV', batteryKwh: 40.5, color: '#303841' },
+                { name: 'MG ZS', batteryKwh: 50.3, color: '#76ABAE' },
+                { name: 'Kona', batteryKwh: 39.2, color: '#FF5722' },
+                { name: 'Tigor', batteryKwh: 24.0, color: '#6c7a89' },
+                { name: 'Ola S1', batteryKwh: 4.0, color: '#f4a261' }
             ];
 
             let currentHighway = null;
             let stations = [];
-            let evList = []; 
+            let evList = [];
             let selectedEV = null;
             const evInspector = document.getElementById('ev-inspector');
 
@@ -683,7 +717,7 @@
             // Highway loading engine
             function loadHighway(hwId) {
                 currentHighway = highwaysConfig[hwId];
-                
+
                 stations = currentHighway.stations.map((st, index) => {
                     return {
                         ...st,
@@ -694,11 +728,11 @@
                         y: 230 // Charger slots level
                     };
                 });
-                
-                evList = []; 
-                totalServedCount = 0; 
+
+                evList = [];
+                totalServedCount = 0;
                 kpiServed.textContent = '0';
-                
+
                 for (let i = 0; i < 4; i++) {
                     setTimeout(() => { spawnEV(); }, i * 1200);
                 }
@@ -723,7 +757,7 @@
                 if (!currentHighway) return;
                 const modelSelect = document.getElementById('spawn-model');
                 const socInput = document.getElementById('spawn-soc');
-                
+
                 let modelName = modelSelect ? modelSelect.value : 'random';
                 let modelObj;
                 if (modelName === 'random') {
@@ -731,22 +765,22 @@
                 } else {
                     modelObj = evModels.find(m => m.name === modelName) || evModels[0];
                 }
-                
+
                 let soc;
                 if (socInput && socInput.value !== '') {
                     soc = parseInt(socInput.value);
                     if (isNaN(soc) || soc < 1) soc = 1;
                     if (soc > 100) soc = 100;
-                    socInput.value = ''; 
+                    socInput.value = '';
                 } else {
                     soc = Math.floor(15 + Math.random() * 65);
                     if (modelObj.name === 'Ola S1') {
                         soc = Math.floor(10 + Math.random() * 25);
                     }
                 }
-                
+
                 const speed = 2.0 + Math.random() * 1.0;
-                
+
                 const ev = {
                     id: Math.floor(Math.random() * 100000),
                     model: modelObj.name,
@@ -755,16 +789,16 @@
                     soc: soc,
                     targetSoc: 85 + Math.floor(Math.random() * 10),
                     x: 10,
-                    y: roadY + roadHeight * 0.7, 
+                    y: roadY + roadHeight * 0.7,
                     speed: speed,
-                    state: 'driving', 
+                    state: 'driving',
                     targetStationIdx: -1,
                     beamAlpha: 1.0,
                     queuePos: -1,
                     chargerIdx: -1,
                     angle: 0
                 };
-                
+
                 routeEV(ev);
                 evList.push(ev);
             }
@@ -773,37 +807,37 @@
                 // Calculate max distance this EV can travel before hitting 0% SOC
                 // Typical EV goes ~250km on 100% SOC.
                 const maxRangeKm = (ev.soc / 100) * 250;
-                
+
                 // Find reachable stations with a safety buffer of 5km
                 let reachableStations = stations.filter(st => st.km <= maxRangeKm - 5);
-                
+
                 if (reachableStations.length === 0) {
                     // If no station is strictly reachable, attempt to reach the very first one
                     reachableStations = [stations[0]];
                 }
-                
+
                 let targetIdx = reachableStations[0].idx;
                 let bestScore = -Infinity;
                 let bestLog = "";
-                
+
                 reachableStations.forEach(st => {
                     // Distribute cars evenly by rewarding driving further, 
                     // but severely penalizing long queues and active chargers.
-                    const distanceReward = (st.km / maxRangeKm) * 100; 
+                    const distanceReward = (st.km / maxRangeKm) * 100;
                     const queuePenalty = st.queue.length * 40;
                     const activeCountPenalty = st.chargers.filter(c => c !== null).length * 10;
-                    
+
                     const score = distanceReward - queuePenalty - activeCountPenalty;
-                    
+
                     if (score > bestScore) {
                         bestScore = score;
                         targetIdx = st.idx;
                         bestLog = `Routed to ${st.name} (Score: ${Math.round(score)}). +${Math.round(distanceReward)} for distance, -${queuePenalty} for queue length, -${activeCountPenalty} for active chargers.`;
                     }
                 });
-                
+
                 ev.targetStationIdx = targetIdx;
-                ev.beamAlpha = 1.0; 
+                ev.beamAlpha = 1.0;
                 ev.aiLog = bestLog;
             }
 
@@ -812,7 +846,7 @@
                 const dx = targetX - ev.x;
                 const dy = targetY - ev.y;
                 const dist = Math.hypot(dx, dy);
-                
+
                 // Dynamic arrival radius based on current speed multiplier to prevent overshooting
                 const moveDist = ev.speed * timeMultiplier;
                 if (dist <= moveDist * 1.5 || dist < 4) {
@@ -825,17 +859,17 @@
                 let diff = targetAngle - ev.angle;
                 while (diff < -Math.PI) diff += Math.PI * 2;
                 while (diff > Math.PI) diff -= Math.PI * 2;
-                
+
                 // Dynamically tighten turning radius as we approach the target to completely eliminate looping
                 let dynamicTurnSpeed = turnSpeed;
                 if (dist < 40) dynamicTurnSpeed = Math.max(turnSpeed, 0.4);
                 if (dist < 20) dynamicTurnSpeed = 1.0; // Snap to angle if very close
-                
+
                 ev.angle += diff * Math.min(1, dynamicTurnSpeed * timeMultiplier);
-                
+
                 ev.x += Math.cos(ev.angle) * moveDist;
                 ev.y += Math.sin(ev.angle) * moveDist;
-                
+
                 return false;
             }
 
@@ -867,7 +901,7 @@
                         ev.beamAlpha -= 0.015 * timeMultiplier;
                     }
 
-                    switch(ev.state) {
+                    switch (ev.state) {
                         case 'driving':
                             // Collision Avoidance Logic
                             let targetSpeed = ev.speed;
@@ -879,7 +913,7 @@
                                         if (distAhead < 120) {
                                             targetSpeed = 0; // Hard brake!
                                         } else {
-                                            targetSpeed = Math.min(targetSpeed, otherSpeed * 0.7); 
+                                            targetSpeed = Math.min(targetSpeed, otherSpeed * 0.7);
                                         }
                                     }
                                 }
@@ -891,58 +925,58 @@
                             while (diff0 < -Math.PI) diff0 += Math.PI * 2;
                             while (diff0 > Math.PI) diff0 -= Math.PI * 2;
                             ev.angle += diff0 * 0.1 * timeMultiplier;
-                            
+
                             ev.x += Math.cos(ev.angle) * ev.effectiveSpeed * timeMultiplier;
                             ev.y += Math.sin(ev.angle) * ev.effectiveSpeed * timeMultiplier;
                             ev.y += (roadY + roadHeight * 0.7 - ev.y) * 0.1 * timeMultiplier;
-                            
+
                             const distanceMoved = ev.effectiveSpeed * timeMultiplier;
                             ev.soc -= (distanceMoved * 0.015);
-                            
+
                             if (ev.soc <= 0) {
                                 ev.soc = 0;
                                 ev.state = 'stranded';
                             } else {
-                                const turnOffX = station.x - 80; 
+                                const turnOffX = station.x - 80;
                                 if (ev.x >= turnOffX) {
                                     ev.state = 'turning_in';
                                 }
                             }
                             break;
-                            
+
                         case 'stranded':
                             // Vehicle is out of battery and stays still
                             break;
-                            
+
                         case 'turning_in':
                             const qEntryX = station.x - 30;
                             const qEntryY = 380;
-                            
+
                             if (steerTowards(ev, qEntryX, qEntryY, 0.08)) {
                                 ev.state = 'waiting';
                                 station.queue.push(ev);
                                 ev.queuePos = station.queue.length - 1;
                             }
                             break;
-                            
+
                         case 'waiting':
                             const qIndex = station.queue.indexOf(ev);
                             if (qIndex !== -1) {
                                 ev.queuePos = qIndex;
                                 const targetQueueX = station.x - 30;
                                 const targetQueueY = 265 + ev.queuePos * 42;
-                                
+
                                 // Face strictly upwards while moving up the queue
                                 let targetAngle = -Math.PI / 2;
                                 let diffW = targetAngle - ev.angle;
                                 while (diffW < -Math.PI) diffW += Math.PI * 2;
                                 while (diffW > Math.PI) diffW -= Math.PI * 2;
                                 ev.angle += diffW * 0.15 * timeMultiplier;
-                                
+
                                 const qDx = targetQueueX - ev.x;
                                 const qDy = targetQueueY - ev.y;
                                 const qDist = Math.hypot(qDx, qDy);
-                                
+
                                 if (qDist > 2) {
                                     const stepDist = ev.speed * timeMultiplier;
                                     ev.x += (qDx / qDist) * Math.min(stepDist, qDist);
@@ -953,7 +987,7 @@
                                 }
                             }
                             break;
-                            
+
                         case 'entering_slot':
                             // Beautiful smooth arc from the queue into the specific charger slot
                             if (steerTowards(ev, ev.targetX, ev.targetY, 0.12)) {
@@ -967,20 +1001,20 @@
                             while (diffC < -Math.PI) diffC += Math.PI * 2;
                             while (diffC > Math.PI) diffC -= Math.PI * 2;
                             ev.angle += diffC * 0.15 * timeMultiplier;
-                            
-                            const baseChargeRate = (station.chargerKw / ev.batteryKwh) * 0.25; 
+
+                            const baseChargeRate = (station.chargerKw / ev.batteryKwh) * 0.25;
                             ev.soc = Math.min(100, ev.soc + baseChargeRate * timeMultiplier);
-                            
+
                             if (ev.soc >= ev.targetSoc) {
                                 ev.state = 'leaving';
                                 // Retain ev.chargerIdx to lock the slot until we physically clear it
                             }
                             break;
-                            
+
                         case 'leaving':
-                            const exitRoadX = station.x + 40; 
-                            const exitRoadY = roadY + roadHeight * 0.3; 
-                            
+                            const exitRoadX = station.x + 40;
+                            const exitRoadY = roadY + roadHeight * 0.3;
+
                             // Release the slot only after the car has physically driven clear of the pad
                             if (ev.chargerIdx !== -1) {
                                 const padX = station.x - ((station.nChargers - 1) * 16) + ev.chargerIdx * 32;
@@ -990,13 +1024,13 @@
                                     ev.chargerIdx = -1;
                                 }
                             }
-                            
+
                             if (steerTowards(ev, exitRoadX, exitRoadY, 0.06)) {
                                 ev.state = 'driving_off';
                                 totalServedCount++;
                             }
                             break;
-                            
+
                         case 'driving_off':
                             let targetSpeedOff = ev.speed;
                             evList.forEach(other => {
@@ -1007,7 +1041,7 @@
                                         if (distAhead < 120) {
                                             targetSpeedOff = 0; // Hard brake!
                                         } else {
-                                            targetSpeedOff = Math.min(targetSpeedOff, otherSpeed * 0.7); 
+                                            targetSpeedOff = Math.min(targetSpeedOff, otherSpeed * 0.7);
                                         }
                                     }
                                 }
@@ -1019,11 +1053,11 @@
                             while (diffOff < -Math.PI) diffOff += Math.PI * 2;
                             while (diffOff > Math.PI) diffOff -= Math.PI * 2;
                             ev.angle += diffOff * 0.1 * timeMultiplier;
-                            
+
                             ev.x += Math.cos(ev.angle) * ev.effectiveSpeed * timeMultiplier;
                             ev.y += Math.sin(ev.angle) * ev.effectiveSpeed * timeMultiplier;
                             ev.y += (roadY + roadHeight * 0.3 - ev.y) * 0.1 * timeMultiplier;
-                            
+
                             if (ev.x > canvas.width + 40) {
                                 evList.splice(i, 1);
                             }
@@ -1039,7 +1073,7 @@
                             nextEv.state = 'entering_slot';
                             nextEv.chargerIdx = c;
                             st.chargers[c] = nextEv;
-                            
+
                             nextEv.targetX = st.x - ((st.nChargers - 1) * 16) + c * 32;
                             nextEv.targetY = st.y - 10;
                         }
@@ -1047,7 +1081,7 @@
                 });
 
                 kpiServed.textContent = totalServedCount;
-                
+
                 let activeCharging = 0;
                 stations.forEach(st => {
                     activeCharging += st.chargers.filter(c => c !== null).length;
@@ -1088,7 +1122,7 @@
                 ctx.fillStyle = '#6c7a89';
                 ctx.font = '13px "JetBrains Mono", monospace';
                 ctx.textAlign = 'center';
-                
+
                 // Determine tick marks dynamically based on total length
                 let tickInterval = 20;
                 if (currentHighway.lengthKm < 100) tickInterval = 10;
@@ -1117,28 +1151,28 @@
                 ctx.font = 'bold 13px Inter, sans-serif';
                 ctx.textAlign = 'left';
                 ctx.fillText(currentHighway.origin + ' (START)', getXFromKm(0), rulerY + 40);
-                
+
                 ctx.textAlign = 'right';
                 ctx.fillText(currentHighway.destination + ' (END)', getXFromKm(currentHighway.lengthKm), rulerY + 40);
 
                 // Highway Road
-                ctx.fillStyle = '#cbd5e1'; 
+                ctx.fillStyle = '#cbd5e1';
                 ctx.fillRect(0, roadY, canvas.width, roadHeight);
 
                 // Draw asphalt driveways for stations
                 stations.forEach(st => {
                     const baseWidth = st.nChargers * 32 + 16;
-                    const padWidth = baseWidth + 16; 
+                    const padWidth = baseWidth + 16;
                     const halfWidth = padWidth / 2;
-                    
+
                     ctx.fillStyle = '#cbd5e1';
                     ctx.beginPath();
-                    ctx.moveTo(st.x - halfWidth - 6, roadY); 
+                    ctx.moveTo(st.x - halfWidth - 6, roadY);
                     ctx.lineTo(st.x - halfWidth + 6, 235);
                     ctx.lineTo(st.x + halfWidth - 6, 235);
                     ctx.lineTo(st.x + halfWidth + 6, roadY);
                     ctx.fill();
-                    
+
                     // Station concrete pad dynamically sized
                     ctx.fillStyle = '#f1f5f9';
                     drawRoundedRect(ctx, st.x - halfWidth, 175, padWidth, 65, 8);
@@ -1162,7 +1196,7 @@
                     const baseWidth = st.nChargers * 32 + 16;
                     const padWidth = baseWidth + 16;
                     const halfWidth = padWidth / 2;
-                    
+
                     ctx.beginPath();
                     ctx.moveTo(st.x - halfWidth - 4, roadY);
                     ctx.lineTo(st.x + halfWidth + 4, roadY);
@@ -1177,12 +1211,12 @@
                 ctx.moveTo(0, roadY + roadHeight / 2);
                 ctx.lineTo(canvas.width, roadY + roadHeight / 2);
                 ctx.stroke();
-                ctx.setLineDash([]); 
+                ctx.setLineDash([]);
 
                 // Stations
                 stations.forEach(st => {
                     const hasActiveCharging = st.chargers.some(c => c !== null);
-                    
+
                     if (hasActiveCharging) {
                         const gradient = ctx.createRadialGradient(st.x, st.y, 10, st.x, st.y, 90);
                         gradient.addColorStop(0, 'rgba(255, 87, 34, 0.12)');
@@ -1211,7 +1245,7 @@
                     ctx.fillStyle = '#FFFFFF';
                     ctx.strokeStyle = 'rgba(118, 171, 174, 0.8)';
                     ctx.lineWidth = 2;
-                    drawRoundedRect(ctx, st.x - cardWidth/2, st.labelY - cardHeight/2, cardWidth, cardHeight, 8);
+                    drawRoundedRect(ctx, st.x - cardWidth / 2, st.labelY - cardHeight / 2, cardWidth, cardHeight, 8);
                     ctx.fill();
                     ctx.stroke();
                     ctx.restore();
@@ -1220,7 +1254,7 @@
                     ctx.font = 'bold 13px Inter, sans-serif';
                     ctx.textAlign = 'center';
                     ctx.fillText(st.name, st.x, st.labelY - 2);
-                    
+
                     ctx.font = '11px "JetBrains Mono", monospace';
                     ctx.fillStyle = '#6c7a89';
                     ctx.fillText(`${st.km} km`, st.x, st.labelY + 16);
@@ -1245,14 +1279,14 @@
                     ctx.strokeStyle = 'rgba(118, 171, 174, 0.4)';
                     ctx.lineWidth = 1.5;
                     const baseWidth = st.nChargers * 32 + 16;
-                    drawRoundedRect(ctx, st.x - baseWidth/2, st.y - 14, baseWidth, 28, 6);
+                    drawRoundedRect(ctx, st.x - baseWidth / 2, st.y - 14, baseWidth, 28, 6);
                     ctx.fill();
                     ctx.stroke();
 
                     for (let c = 0; c < st.nChargers; c++) {
                         const slotX = st.x - ((st.nChargers - 1) * 16) + c * 32;
                         const occupied = st.chargers[c] !== null;
-                        
+
                         ctx.strokeStyle = occupied ? '#FF5722' : '#76ABAE';
                         ctx.lineWidth = occupied ? 2 : 1.5;
                         ctx.fillStyle = occupied ? 'rgba(255, 87, 34, 0.1)' : '#FFFFFF';
@@ -1273,7 +1307,7 @@
                             ctx.moveTo(slotX, st.y - 10);
                             ctx.bezierCurveTo(slotX - 5, st.y - 20, slotX - 8, st.y - 16, slotX, st.y - 8);
                             ctx.stroke();
-                            
+
                             if (Math.sin(Date.now() / 150) > 0) {
                                 ctx.fillStyle = '#FF5722';
                                 ctx.beginPath();
@@ -1282,7 +1316,7 @@
                             }
                         }
                     }
-                    ctx.textBaseline = 'alphabetic'; 
+                    ctx.textBaseline = 'alphabetic';
 
                     // Queue box backdrop
                     ctx.fillStyle = 'rgba(118, 171, 174, 0.05)';
@@ -1333,7 +1367,7 @@
                 c.shadowOffsetY = 2;
 
                 c.fillStyle = color;
-                drawRoundedRect(c, -width/2, -height/2, width, height, 4);
+                drawRoundedRect(c, -width / 2, -height / 2, width, height, 4);
                 c.fill();
                 c.shadowColor = 'transparent';
 
@@ -1344,18 +1378,18 @@
                 c.fillRect(-width * 0.25, -height * 0.35, width * 0.3, height * 0.7);
 
                 c.fillStyle = '#fffde7';
-                c.fillRect(width/2 - 2, -height * 0.35, 2, height * 0.15);
-                c.fillRect(width/2 - 2, height * 0.2, 2, height * 0.15);
+                c.fillRect(width / 2 - 2, -height * 0.35, 2, height * 0.15);
+                c.fillRect(width / 2 - 2, height * 0.2, 2, height * 0.15);
 
                 c.fillStyle = '#ff1744';
-                c.fillRect(-width/2, -height * 0.35, 2, height * 0.15);
-                c.fillRect(-width/2, height * 0.2, 2, height * 0.15);
+                c.fillRect(-width / 2, -height * 0.35, 2, height * 0.15);
+                c.fillRect(-width / 2, height * 0.2, 2, height * 0.15);
 
                 c.restore();
 
                 const barWidth = 36;
                 const barHeight = 5;
-                
+
                 let labelX = x;
                 let labelY = y - 26;
                 let barX = x - barWidth / 2;
@@ -1386,19 +1420,19 @@
                 c.fillStyle = '#303841';
                 c.font = 'bold 11px "JetBrains Mono", monospace';
                 c.textAlign = alignText;
-                
+
                 const textX = (alignText === 'left') ? (x + 24) : labelX;
-                
+
                 let labelText = `${model} (${Math.round(soc)}%)`;
                 if (state === 'charging' || state === 'entering_slot' || state === 'leaving') {
                     labelText = `${Math.round(soc)}%`; // Simplify label to prevent overlaps in slots
                 }
-                
+
                 c.fillText(labelText, textX, labelY);
 
                 if (state === 'charging') {
                     const pulse = Math.abs(Math.sin(Date.now() / 150));
-                    c.fillStyle = `rgba(255, 87, 34, ${pulse})`; 
+                    c.fillStyle = `rgba(255, 87, 34, ${pulse})`;
                     c.font = 'bold 14px Arial';
                     c.textAlign = 'center';
                     c.fillText('⚡', x, y + 5);
@@ -1424,7 +1458,7 @@
                     c.beginPath();
                     c.arc(x, y, 22, 0, Math.PI * 2);
                     c.stroke();
-                    
+
                     c.fillStyle = 'rgba(118, 171, 174, 0.2)';
                     c.fill();
                 }
@@ -1437,12 +1471,12 @@
                 const hour12 = hourInt % 12 === 0 ? 12 : hourInt % 12;
                 const minStr = minInt < 10 ? '0' + minInt : minInt;
                 const hourStr = hour12 < 10 ? '0' + hour12 : hour12;
-                
+
                 timeDisplay.textContent = `${hourStr}:${minStr} ${ampm}`;
 
                 let rate = 6.80;
                 let isCheap = false;
-                
+
                 if (hourInt >= 22 || hourInt < 6) {
                     rate = 5.50;
                     isCheap = true;
@@ -1451,7 +1485,7 @@
                 }
 
                 tariffDisplay.innerHTML = `₹${rate.toFixed(2)}/kWh ${isCheap ? '<span class="cheap-badge">Night Window</span>' : ''}`;
-                
+
                 const tariffRow = document.getElementById('tariff-row');
                 if (isCheap) {
                     tariffDisplay.classList.add('tariff-glow-green');
@@ -1466,14 +1500,14 @@
 
             function updateStationGridUI() {
                 stationInfoGrid.innerHTML = '';
-                
+
                 stations.forEach(st => {
                     const activeCount = st.chargers.filter(c => c !== null).length;
                     const isOccupied = activeCount > 0;
-                    
+
                     const card = document.createElement('div');
                     card.className = `station-card-vis ${isOccupied ? 'active-charging' : ''}`;
-                    
+
                     card.innerHTML = `
                         <div class="station-header-vis">
                             <h3 class="station-name-vis">${st.name}</h3>
@@ -1504,7 +1538,7 @@
                 updateSimulation();
                 draw();
                 updateStationGridUI();
-                
+
                 if (selectedEV) {
                     // Update DOM
                     document.getElementById('insp-model').textContent = selectedEV.model;
@@ -1513,25 +1547,25 @@
                     document.getElementById('insp-state').textContent = selectedEV.state.charAt(0).toUpperCase() + selectedEV.state.slice(1).replace('_', ' ');
                     document.getElementById('insp-target').textContent = selectedEV.targetStationIdx >= 0 ? stations[selectedEV.targetStationIdx].name : 'None';
                     document.getElementById('insp-log').textContent = selectedEV.aiLog || 'No log available.';
-                    
+
                     // Position tooltip near the car
                     const rect = canvas.getBoundingClientRect();
                     const scaleX = rect.width / canvas.width;
                     const scaleY = rect.height / canvas.height;
-                    
+
                     const screenX = rect.left + selectedEV.x * scaleX;
                     const screenY = rect.top + selectedEV.y * scaleY;
-                    
+
                     evInspector.style.left = (screenX + 20) + 'px';
                     evInspector.style.top = (screenY - 20) + 'px';
-                    
+
                     // Hide if off screen
                     if (selectedEV.x > canvas.width + 40 || selectedEV.x < -40) {
                         evInspector.style.display = 'none';
                         selectedEV = null;
                     }
                 }
-                
+
                 requestAnimationFrame(gameLoop);
             }
 
@@ -1541,7 +1575,7 @@
                 const scaleY = canvas.height / rect.height;
                 const clickX = (e.clientX - rect.left) * scaleX;
                 const clickY = (e.clientY - rect.top) * scaleY;
-                
+
                 let clickedAny = false;
                 for (let ev of evList) {
                     if (Math.hypot(ev.x - clickX, ev.y - clickY) < 30) {
@@ -1560,7 +1594,7 @@
             playPauseBtn.addEventListener('click', () => {
                 isRunning = !isRunning;
                 playPauseBtn.textContent = isRunning ? 'Pause' : 'Play';
-                if(!isRunning) playPauseBtn.style.background = 'var(--muted)';
+                if (!isRunning) playPauseBtn.style.background = 'var(--muted)';
                 else playPauseBtn.style.background = 'var(--neon)';
             });
 
@@ -1585,4 +1619,5 @@
         });
     </script>
 </body>
+
 </html>

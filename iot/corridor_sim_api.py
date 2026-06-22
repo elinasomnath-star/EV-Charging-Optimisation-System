@@ -156,36 +156,38 @@ def run_simulation_generator(config_path="config/nh44_config.yaml", model_path=N
             
             reward_accums[i] += float(reward)
             
+            queue_size = env.queue.size()
+            
+            if queue_size == 0:
+                action_name = "Hold (Empty Queue)"
+            elif 1 <= action <= 8:
+                actual_n = min(action, env.station["n_chargers"], queue_size)
+                action_name = f"Charge Top-{actual_n}"
+            else:
+                action_name = action_names[action]
+                
             station_metrics[i]["served"] = int(info["evs_served"])
             station_metrics[i]["missed"] = int(info["deadlines_missed"])
             station_metrics[i]["cost"] = float(info["total_cost_rs"])
             station_metrics[i]["reward"] += float(reward)
             station_metrics[i]["violations"] = int(info["grid_violations"])
+            station_metrics[i]["action"] = action_name
+            station_metrics[i]["queue_size"] = queue_size
             
             if step % 4 == 0:
                 tariff_label = env.tariff_model.get_label(hour)
-                queue_before = env.queue.size()
-                
-                if queue_before == 0:
-                    action_name = "---"
-                elif 1 <= action <= 8:
-                    actual_n = min(action, env.station["n_chargers"], queue_before)
-                    action_name = f"Charge top-{actual_n}"
-                else:
-                    action_name = action_names[action]
-                    
                 station_logs[i].append({
                     "step": step,
                     "hour": round(hour, 1),
                     "tariff": tariff_label,
-                    "queue": queue_before,
+                    "queue": queue_size,
                     "action": action_name,
                     "reward": round(reward_accums[i], 2)
                 })
                 reward_accums[i] = 0.0
             
-            queues_str.append(str(env.queue.size()))
-            queues_data.append(env.queue.size())
+            queues_str.append(str(queue_size))
+            queues_data.append(queue_size)
 
         # Always yield step data (or maybe only every 4th step if UI doesn't need to be so fine-grained, but let's yield every step for smooth animation)
         routes_str = ", ".join(set(routed_this_step)) if routed_this_step else "None"
